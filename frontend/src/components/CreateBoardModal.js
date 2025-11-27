@@ -8,10 +8,14 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
     event_type: '',
     rental_start_date: '',
     rental_end_date: '',
-    notes: ''
+    notes: '',
+    cover_image: ''
   });
 
-  const handleSubmit = (e) => {
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Create board data object, excluding empty values
@@ -22,6 +26,20 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
       }
     });
     
+    // If image file selected, upload it first
+    if (imageFile) {
+      try {
+        const formDataImage = new FormData();
+        formDataImage.append('file', imageFile);
+        
+        // Here you would upload the image to your backend
+        // For now, we'll use the preview URL
+        boardData.cover_image = imagePreview;
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+    
     onCreateBoard(boardData);
   };
 
@@ -29,6 +47,54 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
+    });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Будь ласка, оберіть файл зображення');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Розмір файлу не повинен перевищувати 5MB');
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUrlChange = (e) => {
+    const url = e.target.value;
+    setFormData({
+      ...formData,
+      cover_image: url
+    });
+    
+    if (url) {
+      setImagePreview(url);
+      setImageFile(null);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setImageFile(null);
+    setFormData({
+      ...formData,
+      cover_image: ''
     });
   };
 
