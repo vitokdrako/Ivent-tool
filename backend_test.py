@@ -232,8 +232,8 @@ class FarforDecorAPITester:
     def test_product_availability(self):
         """Test product availability check"""
         availability_data = {
-            "product_id": 1,
-            "quantity": 2,
+            "product_id": 59,  # Using actual product ID
+            "quantity": 1,  # Using available quantity
             "reserved_from": "2024-12-24",
             "reserved_until": "2024-12-26"
         }
