@@ -248,7 +248,7 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
                       }}
                       onBlur={(e) => handleImageUrlChange(e)}
                     />
-                    <span className="upload-hint">🔗 Вставте URL зображення (натисніть Enter)</span>
+                    <span className="upload-hint">Вставте URL зображення (натисніть Enter)</span>
                   </div>
                 </div>
               </div>
