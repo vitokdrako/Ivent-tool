@@ -767,6 +767,8 @@ async def update_board_item(
             db, board, product, item.quantity, current_user.customer_id
         )
     
+    logger.info(f"Item {item_id} quantity updated to {item.quantity} in board {board_id}")
+    
     # Return as dict
     return {
         'id': item.id,
