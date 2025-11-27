@@ -1,110 +1,122 @@
 {
-  "total_tests": 17,
-  "passed_tests": 14,
-  "failed_tests": 3,
-  "success_rate": 82.35294117647058,
+  "total_tests": 19,
+  "passed_tests": 18,
+  "failed_tests": 1,
+  "success_rate": 94.73684210526315,
   "test_results": [
     {
       "test": "Health Check",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:36.323532"
+      "timestamp": "2025-11-27T13:01:25.253066"
     },
     {
       "test": "User Login",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:37.256909"
+      "timestamp": "2025-11-27T13:01:26.190567"
     },
     {
       "test": "Get User Info",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:37.831703"
+      "timestamp": "2025-11-27T13:01:26.764835"
     },
     {
       "test": "Get Categories",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:38.405909"
+      "timestamp": "2025-11-27T13:01:27.334606"
     },
     {
       "test": "Get All Subcategories",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:38.986189"
+      "timestamp": "2025-11-27T13:01:27.910493"
     },
     {
       "test": "Get Subcategories for Category",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:39.564694"
+      "timestamp": "2025-11-27T13:01:28.491741"
     },
     {
       "test": "Get Products",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:40.274362"
+      "timestamp": "2025-11-27T13:01:29.205968"
     },
     {
       "test": "Search Products",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:41.032416"
+      "timestamp": "2025-11-27T13:01:29.915494"
     },
     {
       "test": "Filter by Category",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:41.611456"
+      "timestamp": "2025-11-27T13:01:30.489959"
     },
     {
       "test": "Filter by Color",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:42.344810"
+      "timestamp": "2025-11-27T13:01:31.232524"
     },
     {
       "test": "Check Product Availability",
-      "success": false,
-      "details": "Expected 200, got 404 - Product not found",
-      "timestamp": "2025-11-27T13:00:42.960712"
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:01:32.086398"
     },
     {
       "test": "Create Event Board",
       "success": true,
       "details": "Status: 201",
-      "timestamp": "2025-11-27T13:00:44.209698"
+      "timestamp": "2025-11-27T13:01:33.333401"
     },
     {
       "test": "Get User Boards",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:45.060680"
+      "timestamp": "2025-11-27T13:01:34.174921"
     },
     {
       "test": "Get Board Details",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-11-27T13:00:45.911569"
+      "timestamp": "2025-11-27T13:01:35.019997"
     },
     {
       "test": "Update Board",
       "success": false,
       "details": "Expected 200, got 422 - [{'type': 'missing', 'loc': ['body', 'event_date'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'event_type'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'rental_start_date'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'rental_end_date'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'notes'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'status'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'canvas_layout'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}]",
-      "timestamp": "2025-11-27T13:00:46.487648"
+      "timestamp": "2025-11-27T13:01:35.640251"
     },
     {
       "test": "Add Item to Board",
-      "success": false,
-      "details": "Expected 201, got 404 - Product not found",
-      "timestamp": "2025-11-27T13:00:47.329108"
+      "success": true,
+      "details": "Status: 201",
+      "timestamp": "2025-11-27T13:01:37.735552"
+    },
+    {
+      "test": "Update Board Item",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:01:39.787575"
+    },
+    {
+      "test": "Delete Board Item",
+      "success": true,
+      "details": "Status: 204",
+      "timestamp": "2025-11-27T13:01:41.180038"
     },
     {
       "test": "Cleanup - Delete Test Board",
       "success": true,
       "details": "Status: 204",
-      "timestamp": "2025-11-27T13:00:48.464836"
+      "timestamp": "2025-11-27T13:01:42.314287"
     }
   ]
 }
