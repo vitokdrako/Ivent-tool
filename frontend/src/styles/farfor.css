@@ -79,6 +79,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #444444;
+  transition: var(--fd-transition);
 }
 
 .fd-btn-primary:hover {
