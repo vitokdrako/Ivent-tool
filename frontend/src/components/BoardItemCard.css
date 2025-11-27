@@ -84,15 +84,15 @@
 }
 
 .board-item-quantity-btn {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--corp-bg-white);
     border: 1px solid var(--corp-border);
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--corp-text-dark);
     cursor: pointer;
     transition: var(--corp-transition);
@@ -112,12 +112,12 @@
 }
 
 .board-item-quantity-input {
-    width: 50px;
-    height: 28px;
+    width: 45px;
+    height: 24px;
     text-align: center;
     border: 1px solid var(--corp-border);
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 12px;
     font-family: 'Montserrat', Arial, sans-serif;
     font-weight: 500;
     color: var(--corp-text-dark);
