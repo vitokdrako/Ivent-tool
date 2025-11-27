@@ -26,18 +26,9 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
       }
     });
     
-    // If image file selected, upload it first
-    if (imageFile) {
-      try {
-        const formDataImage = new FormData();
-        formDataImage.append('file', imageFile);
-        
-        // Here you would upload the image to your backend
-        // For now, we'll use the preview URL
-        boardData.cover_image = imagePreview;
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
+    // Add image preview if exists (either from URL or file upload)
+    if (imagePreview) {
+      boardData.cover_image = imagePreview;
     }
     
     onCreateBoard(boardData);
