@@ -104,7 +104,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
       {/* Header */}
-      <div className="fd-header flex items-center justify-between" style={{padding: '16px 32px', background: '#fff'}}>
+      <div className="fd-header flex items-center justify-between" style={{padding: '16px 32px', background: '#fff', borderBottom: '1px solid #e3e3e3'}}>
         <div className="flex items-center gap-4">
           <button onClick={onClose} className="fd-btn fd-btn-secondary">
             ← Назад
@@ -129,88 +129,62 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
         </div>
       </div>
 
-      {/* Carousel with items */}
-      <div style={{background: '#f5f5f5', borderBottom: '1px solid #e3e3e3', padding: '16px 32px'}}>
-        <div className="flex gap-3 overflow-x-auto" style={{maxWidth: '100%'}}>
-          {board.items && board.items.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => handleAddItem(item)}
-              className="fd-card cursor-pointer hover:shadow-lg"
-              style={{minWidth: '120px', padding: '8px', background: '#fff'}}
-            >
-              <div
-                style={{
-                  width: '104px',
-                  height: '104px',
-                  background: item.product?.image_url
-                    ? `url(https://www.farforrent.com.ua/${item.product.image_url.replace(/^static\//, '')})`
-                    : 'linear-gradient(135deg, #f0f0f0, #e4e4e4)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  borderRadius: '3px',
-                  marginBottom: '4px',
-                }}
-              />
-              <p style={{fontSize: '10px', color: '#666', lineHeight: '1.2'}} className="line-clamp-2">
-                {item.product?.name}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Main Content - Canvas + Right Sidebar */}
+      <div className="flex flex-1 overflow-hidden">
+        
+        {/* Left Side - Canvas Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Toolbar */}
+          <div style={{background: '#fff', borderBottom: '1px solid #e3e3e3', padding: '12px 32px'}}>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="fd-label">🎨 Фон:</span>
+                <input
+                  type="color"
+                  value={background}
+                  onChange={(e) => setBackground(e.target.value)}
+                  className="fd-input"
+                  style={{width: '60px', height: '32px', padding: '2px'}}
+                />
+                <button
+                  onClick={() => setBackground('#ffffff')}
+                  className="fd-btn fd-btn-small"
+                  style={{background: '#fff', border: '1px solid #ddd'}}
+                >
+                  Білий
+                </button>
+                <button
+                  onClick={() => setBackground('#f5f5dc')}
+                  className="fd-btn fd-btn-small"
+                  style={{background: '#f5f5dc', border: '1px solid #ddd'}}
+                >
+                  Бежевий
+                </button>
+              </div>
 
-      {/* Toolbar */}
-      <div style={{background: '#fff', borderBottom: '1px solid #e3e3e3', padding: '12px 32px'}}>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="fd-label">🎨 Фон:</span>
-            <input
-              type="color"
-              value={background}
-              onChange={(e) => setBackground(e.target.value)}
-              className="fd-input"
-              style={{width: '60px', height: '32px', padding: '2px'}}
-            />
-            <button
-              onClick={() => setBackground('#ffffff')}
-              className="fd-btn fd-btn-small"
-              style={{background: '#fff', border: '1px solid #ddd'}}
-            >
-              Білий
-            </button>
-            <button
-              onClick={() => setBackground('#f5f5dc')}
-              className="fd-btn fd-btn-small"
-              style={{background: '#f5f5dc', border: '1px solid #ddd'}}
-            >
-              Бежевий
-            </button>
+              <div className="w-px h-6" style={{background: '#e3e3e3'}}></div>
+
+              <button onClick={handleAddText} className="fd-btn fd-btn-secondary">
+                📝 Додати текст
+              </button>
+
+              {selectedId && (
+                <>
+                  <div className="w-px h-6" style={{background: '#e3e3e3'}}></div>
+                  <button
+                    onClick={() => handleDeleteElement(selectedId)}
+                    className="fd-btn fd-btn-small"
+                    style={{color: '#c62828', border: '1px solid #c62828'}}
+                  >
+                    🗑️ Видалити
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
-          <div className="w-px h-6" style={{background: '#e3e3e3'}}></div>
-
-          <button onClick={handleAddText} className="fd-btn fd-btn-secondary">
-            📝 Додати текст
-          </button>
-
-          {selectedId && (
-            <>
-              <div className="w-px h-6" style={{background: '#e3e3e3'}}></div>
-              <button
-                onClick={() => handleDeleteElement(selectedId)}
-                className="fd-btn fd-btn-small"
-                style={{color: '#c62828', border: '1px solid #c62828'}}
-              >
-                🗑️ Видалити
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Canvas */}
-      <div className="flex-1 overflow-auto" style={{background: '#e8e8e8', padding: '40px'}}>
+          {/* Canvas */}
+          <div className="flex-1 overflow-auto" style={{background: '#e8e8e8', padding: '40px'}}>
         <div
           ref={canvasRef}
           className="relative mx-auto"
