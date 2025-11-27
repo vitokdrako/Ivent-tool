@@ -364,7 +364,7 @@ const EventPlannerPage = () => {
         });
       }
     });
-    return Array.from(colors).sort();
+    return Array.from(colors).sort((a, b) => a.localeCompare(b, 'uk'));
   }, [products]);
 
   // Reset subcategory when category changes
