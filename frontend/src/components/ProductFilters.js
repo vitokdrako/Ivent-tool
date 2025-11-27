@@ -56,7 +56,7 @@ const ProductFilters = ({
           size="1"
           title={!subcategories.length ? 'Спочатку виберіть категорію' : `${subcategories.length} підкатегорій доступно`}
         >
-          <option value="">📋 Всі підкатегорії</option>
+          <option value="">Всі підкатегорії</option>
           {subcategories.map((subcat, index) => (
             <option key={index} value={subcat}>
               {subcat}
