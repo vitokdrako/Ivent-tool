@@ -35,21 +35,10 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
 
   const getImageUrl = () => {
     if (product.image_url) {
-      // OpenCart зберігає зображення в: image/cache/catalog/...
-      // Але в базі у нас: static/images/products/image/59/kreslo-2.jpg
-      // Конвертуємо в правильний шлях
-      let imagePath = product.image_url;
-      
-      // Якщо шлях починається з static/images/products/image/
-      if (imagePath.includes('static/images/products/image/')) {
-        // Видаляємо static/images/products/image/ і додаємо image/cache/catalog/image/catalog/products/
-        const parts = imagePath.split('/');
-        const productId = parts[4]; // ID товару
-        const fileName = parts[5]; // Назва файлу
-        imagePath = `image/cache/catalog/image/catalog/products/${productId}/${fileName.replace('.jpg', '-300x200.jpg')}`;
-      }
-      
-      return `https://www.farforrent.com.ua/${imagePath}`;
+      // Single source of truth: warehouse uploads directory via backend
+      // Remove 'static/' prefix if present
+      const cleanPath = product.image_url.replace(/^static\//, '');
+      return `${process.env.REACT_APP_BACKEND_URL}/uploads/${cleanPath}`;
     }
     return null;
   };
