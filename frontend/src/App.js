@@ -54,8 +54,20 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center p-4" style={{background: '#f3f3f3'}}>
       <div className="bg-white shadow-sm p-10 w-full max-w-md" style={{borderRadius: '4px', boxShadow: '0 2px 6px rgba(0,0,0,0.03)'}}>
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold mb-1 fd-uppercase-wide" style={{color: '#333'}}>
-            FARFORDECOR
+          {/* Logo */}
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/logo.svg" 
+              alt="FarforDecor Logo" 
+              style={{
+                height: '60px',
+                width: 'auto'
+              }}
+            />
+          </div>
+          {/* Company Name */}
+          <h1 className="text-2xl font-bold mb-1 fd-uppercase-wide" style={{color: '#333', letterSpacing: '0.1em'}}>
+            FarforDecorOrenda
           </h1>
           <p className="text-xs fd-uppercase" style={{color: '#999', marginTop: '8px'}}>Event Planning Platform</p>
         </div>
