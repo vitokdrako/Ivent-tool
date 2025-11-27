@@ -193,6 +193,60 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
             />
           </div>
 
+          <div className="form-group">
+            <label className="form-label">Обкладинка івенту</label>
+            
+            {imagePreview ? (
+              <div className="image-preview-container">
+                <img 
+                  src={imagePreview} 
+                  alt="Preview" 
+                  className="image-preview"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="image-remove-btn"
+                  title="Видалити зображення"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="image-upload-area">
+                <div className="upload-options">
+                  <div className="upload-option">
+                    <label className="upload-label">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="upload-input"
+                      />
+                      <span className="upload-btn">
+                        📁 Завантажити з комп'ютера
+                      </span>
+                    </label>
+                  </div>
+                  
+                  <div className="upload-divider">або</div>
+                  
+                  <div className="upload-option">
+                    <input
+                      type="url"
+                      name="cover_image"
+                      value={formData.cover_image}
+                      onChange={handleImageUrlChange}
+                      placeholder="https://example.com/image.jpg"
+                      className="form-input"
+                    />
+                    <span className="upload-hint">🔗 Вставте URL зображення</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="form-actions">
             <button
               type="button"
