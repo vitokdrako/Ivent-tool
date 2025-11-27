@@ -630,10 +630,10 @@ const EventPlannerPage = () => {
                   )}
                 </div>
 
-                {/* Items List */}
-                <div className="flex-1 overflow-auto p-4">
+                {/* Items List - Більше місця для товарів */}
+                <div className="flex-1 overflow-auto" style={{padding: '12px 12px'}}>
                   {activeBoard.items && activeBoard.items.length > 0 ? (
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {activeBoard.items.map((item) => (
                         <BoardItemCard
                           key={item.id}
@@ -650,32 +650,37 @@ const EventPlannerPage = () => {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-gray-500">
-                      <p style={{fontSize: '15px', fontWeight: '600', marginBottom: '8px'}}>Мудборд порожній</p>
-                      <p className="text-sm">Додайте товари з каталогу</p>
+                      <p style={{fontSize: '14px', fontWeight: '600', marginBottom: '6px'}}>Мудборд порожній</p>
+                      <p style={{fontSize: '12px'}}>Додайте товари з каталогу</p>
                     </div>
                   )}
                 </div>
 
-                {/* Summary */}
-                <div style={{padding: '22px', borderTop: '1px solid #f0f0f0', background: '#fafafa'}}>
-                  <div className="flex justify-between items-center mb-3 pb-3" style={{borderBottom: '1px solid #e6e6e6'}}>
-                    <span className="fd-label">Всього позицій:</span>
-                    <span className="font-bold" style={{color: '#333'}}>{activeBoard.items?.length || 0}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-bold fd-uppercase" style={{fontSize: '12px', color: '#555'}}>Загальна вартість:</span>
-                    <span className="fd-price-large" style={{color: '#333'}}>
-                      ₴{calculateBoardTotal().toFixed(2)}
+                {/* Compact Summary - Оптимізовано */}
+                <div style={{padding: '14px 18px', borderTop: '1px solid #f0f0f0', background: '#fafafa'}}>
+                  {/* Інфо в один рядок */}
+                  <div className="flex justify-between items-center mb-3" style={{fontSize: '11px'}}>
+                    <span style={{color: '#666'}}>
+                      Позицій: <strong style={{color: '#333'}}>{activeBoard.items?.length || 0}</strong>
+                    </span>
+                    <span style={{color: '#666'}}>
+                      Разом: <strong style={{color: '#333', fontSize: '13px'}}>₴{calculateBoardTotal().toFixed(2)}</strong>
                     </span>
                   </div>
+                  
+                  {/* Кнопки */}
                   <button 
                     onClick={() => setShowCanvas(true)}
-                    className="w-full fd-btn fd-btn-primary mb-3"
+                    className="w-full fd-btn fd-btn-primary mb-2"
                     disabled={!activeBoard.items || activeBoard.items.length === 0}
+                    style={{padding: '9px 12px', fontSize: '11px'}}
                   >
                     Візуальний мудборд
                   </button>
-                  <button className="w-full fd-btn fd-btn-black" style={{padding: '12px'}}>
+                  <button 
+                    className="w-full fd-btn fd-btn-black" 
+                    style={{padding: '9px 12px', fontSize: '11px'}}
+                  >
                     Оформити замовлення
                   </button>
                 </div>
