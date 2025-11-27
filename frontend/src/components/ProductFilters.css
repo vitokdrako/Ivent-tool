@@ -148,6 +148,50 @@
     color: white;
 }
 
+/* Better dropdown sizing with scroll - Cross-browser */
+.filter-select-scrollable {
+    /* Standard select height */
+    max-height: 300px;
+}
+
+/* Firefox specific - option list scrolling */
+@-moz-document url-prefix() {
+    .filter-select option {
+        padding: 8px 12px;
+    }
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) - custom scrollbar in dropdown */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .filter-select {
+        /* Better dropdown appearance */
+        background-size: 12px;
+    }
+    
+    .filter-select option {
+        padding: 10px 15px;
+        min-height: 36px;
+    }
+}
+
+/* Modern browsers - improve dropdown list appearance */
+.filter-select:focus,
+.filter-select:active {
+    /* Ensure dropdown opens nicely */
+    max-height: none;
+}
+
+/* Ensure adequate spacing for long lists */
+.filter-select[size="1"] {
+    height: 40px;
+}
+
+/* When opened (some browsers support this) */
+.filter-select:focus-within {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .product-filters {
@@ -157,5 +201,9 @@
     .filter-group {
         width: 100%;
         min-width: auto;
+    }
+    
+    .filter-active-tags {
+        justify-content: flex-start;
     }
 }
