@@ -124,7 +124,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
           <button onClick={() => setZoom(Math.min(2, zoom + 0.1))} className="fd-btn fd-btn-secondary">
             +
           </button>
-          <button onClick={handleSaveCanvas} className="fd-btn fd-btn-black">
+          <button onClick={handleSaveCanvas} className="fd-btn fd-btn-secondary">
             Зберегти
           </button>
         </div>
