@@ -624,8 +624,7 @@ const EventPlannerPage = () => {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-gray-500">
-                      <p className="text-4xl mb-2">📦</p>
-                      <p>Мудборд порожній</p>
+                      <p style={{fontSize: '15px', fontWeight: '600', marginBottom: '8px'}}>Мудборд порожній</p>
                       <p className="text-sm">Додайте товари з каталогу</p>
                     </div>
                   )}
