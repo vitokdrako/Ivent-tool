@@ -1043,6 +1043,196 @@ async def _create_or_update_soft_reservation(
     
     await db.commit()
 
+# ====================
+# ORDER ENDPOINTS
+# ====================
+
+@api_router.post("/boards/{board_id}/convert-to-order", response_model=OrderResponse)
+async def convert_board_to_order(
+    board_id: str,
+    order_data: OrderCreate,
+    customer_id: int = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Конвертує Event Board у Order (замовлення)
+    - Перевіряє доступність товарів
+    - Розраховує депозит і вартість
+    - Конвертує soft reservations → hard reservations
+    - Створює замовлення в системі
+    """
+    # 1. Отримати Event Board з items
+    board_result = await db.execute(
+        select(EventBoard).where(
+            and_(EventBoard.id == board_id, EventBoard.customer_id == customer_id)
+        )
+    )
+    board = board_result.scalar_one_or_none()
+    
+    if not board:
+        raise HTTPException(status_code=404, detail="Event board not found")
+    
+    if board.converted_to_order_id:
+        raise HTTPException(status_code=400, detail="Board already converted to order")
+    
+    if not board.rental_start_date or not board.rental_end_date:
+        raise HTTPException(status_code=400, detail="Board must have rental dates set")
+    
+    # Отримати items
+    items_result = await db.execute(
+        select(EventBoardItem).where(EventBoardItem.board_id == board_id)
+    )
+    items = items_result.scalars().all()
+    
+    if not items:
+        raise HTTPException(status_code=400, detail="Board has no items")
+    
+    # 2. Перевірити availability для всіх товарів
+    for item in items:
+        # Отримати product
+        product_result = await db.execute(
+            select(Product).where(Product.product_id == item.product_id)
+        )
+        product = product_result.scalar_one_or_none()
+        
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Product {item.product_id} not found")
+        
+        # Перевірити доступність
+        reserved_query = select(func.sum(ProductReservation.quantity)).where(
+            and_(
+                ProductReservation.product_id == product.product_id,
+                ProductReservation.status == 'active',
+                or_(
+                    and_(
+                        ProductReservation.reserved_from <= board.rental_start_date,
+                        ProductReservation.reserved_until >= board.rental_start_date
+                    ),
+                    and_(
+                        ProductReservation.reserved_from <= board.rental_end_date,
+                        ProductReservation.reserved_until >= board.rental_end_date
+                    ),
+                    and_(
+                        ProductReservation.reserved_from >= board.rental_start_date,
+                        ProductReservation.reserved_until <= board.rental_end_date
+                    )
+                )
+            )
+        )
+        reserved_result = await db.execute(reserved_query)
+        reserved = reserved_result.scalar() or 0
+        
+        available = product.quantity - product.frozen_quantity - reserved
+        
+        if available < item.quantity:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Product '{product.name}' not available. Need {item.quantity}, available {available}"
+            )
+    
+    # 3. Розрахувати total_price та deposit
+    total_price = 0
+    for item in items:
+        product_result = await db.execute(
+            select(Product).where(Product.product_id == item.product_id)
+        )
+        product = product_result.scalar_one()
+        
+        rental_days = (board.rental_end_date - board.rental_start_date).days + 1
+        item_price = product.rental_price * item.quantity * rental_days
+        total_price += float(item_price)
+    
+    # Депозит = 30% від загальної вартості
+    deposit_amount = total_price * 0.3
+    
+    # 4. Отримати customer info
+    customer_result = await db.execute(
+        select(Customer).where(Customer.customer_id == customer_id)
+    )
+    customer = customer_result.scalar_one()
+    
+    # 5. Генерувати order_number
+    # Format: OC-YYYYMMDD-XXXX
+    today = datetime.now().strftime("%Y%m%d")
+    last_order_result = await db.execute(
+        select(Order).where(Order.order_number.like(f"OC-{today}-%")).order_by(desc(Order.order_id)).limit(1)
+    )
+    last_order = last_order_result.scalar_one_or_none()
+    
+    if last_order:
+        last_num = int(last_order.order_number.split('-')[-1])
+        new_num = last_num + 1
+    else:
+        new_num = 1
+    
+    order_number = f"OC-{today}-{new_num:04d}"
+    
+    # 6. Створити Order
+    order = Order(
+        order_number=order_number,
+        customer_id=customer_id,
+        customer_name=order_data.customer_name,
+        phone=order_data.phone,
+        email=customer.email,
+        issue_date=board.rental_start_date,
+        return_date=board.rental_end_date,
+        delivery_address=order_data.delivery_address,
+        city=order_data.city,
+        delivery_type=order_data.delivery_type,
+        total_price=total_price,
+        deposit_amount=deposit_amount,
+        discount_amount=0,
+        status='pending',
+        source='event_tool',
+        customer_comment=order_data.customer_comment,
+        event_board_id=board_id,
+        event_type=order_data.event_type,
+        guests_count=order_data.guests_count,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    
+    db.add(order)
+    await db.flush()  # Get order_id
+    
+    # 7. Конвертувати soft → hard reservations
+    for item in items:
+        hard_reservation = ProductReservation(
+            id=str(uuid.uuid4()),
+            product_id=item.product_id,
+            order_id=order.order_id,
+            order_number=order_number,
+            quantity=item.quantity,
+            reserved_from=board.rental_start_date,
+            reserved_until=board.rental_end_date,
+            status='active',
+            created_at=datetime.utcnow()
+        )
+        db.add(hard_reservation)
+    
+    # 8. Видалити soft reservations
+    await db.execute(
+        select(SoftReservation).where(SoftReservation.board_id == board_id)
+    ).scalars().all()
+    
+    delete_soft = await db.execute(
+        select(SoftReservation).where(SoftReservation.board_id == board_id)
+    )
+    for soft_res in delete_soft.scalars().all():
+        await db.delete(soft_res)
+    
+    # 9. Оновити Event Board
+    board.converted_to_order_id = order.order_id
+    board.status = 'converted'
+    board.updated_at = datetime.utcnow()
+    
+    await db.commit()
+    await db.refresh(order)
+    
+    logger.info(f"✅ Order created: {order_number} from board {board_id}")
+    
+    return order
+
 # Health check
 @api_router.get("/health")
 async def health_check():
