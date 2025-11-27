@@ -151,13 +151,13 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
               className="form-select"
             >
               <option value="">Оберіть тип</option>
-              <option value="wedding">💍 Весілля</option>
-              <option value="birthday">🎂 День народження</option>
-              <option value="photoshoot">📸 Фотосесія</option>
-              <option value="corporate">🏢 Корпоратив</option>
-              <option value="anniversary">💐 Ювілей</option>
-              <option value="party">🎉 Вечірка</option>
-              <option value="other">✨ Інше</option>
+              <option value="wedding">Весілля</option>
+              <option value="birthday">День народження</option>
+              <option value="photoshoot">Фотосесія</option>
+              <option value="corporate">Корпоратив</option>
+              <option value="anniversary">Ювілей</option>
+              <option value="party">Вечірка</option>
+              <option value="other">Інше</option>
             </select>
           </div>
 
