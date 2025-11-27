@@ -307,16 +307,38 @@ const EventPlannerPage = () => {
     }
   };
 
-  // Get unique categories from products (since category_id is null, use category_name)
-  const uniqueCategories = React.useMemo(() => {
-    const cats = new Map();
+  // Get all categories from API and products
+  const allCategories = React.useMemo(() => {
+    // Combine categories from API and products
+    const categoriesMap = new Map();
+    
+    // Add categories from API
+    categories.forEach(cat => {
+      categoriesMap.set(cat.name, {
+        name: cat.name,
+        id: cat.category_id,
+        sort_order: cat.sort_order
+      });
+    });
+    
+    // Add categories from products that might not be in API
     products.forEach(p => {
-      if (p.category_name && !cats.has(p.category_name)) {
-        cats.set(p.category_name, { name: p.category_name });
+      if (p.category_name && !categoriesMap.has(p.category_name)) {
+        categoriesMap.set(p.category_name, {
+          name: p.category_name,
+          sort_order: 999
+        });
       }
     });
-    return Array.from(cats.values()).sort((a, b) => a.name.localeCompare(b.name));
-  }, [products]);
+    
+    return Array.from(categoriesMap.values()).sort((a, b) => {
+      // Sort by sort_order first, then by name
+      if (a.sort_order !== b.sort_order) {
+        return a.sort_order - b.sort_order;
+      }
+      return a.name.localeCompare(b.name);
+    });
+  }, [categories, products]);
 
   // Get available subcategories based on selected category
   const availableSubcategories = React.useMemo(() => {
@@ -328,7 +350,7 @@ const EventPlannerPage = () => {
         subcats.add(p.subcategory_name);
       }
     });
-    return Array.from(subcats).sort();
+    return Array.from(subcats).sort((a, b) => a.localeCompare(b, 'uk'));
   }, [products, selectedCategory]);
 
   // Get all available colors
