@@ -32,7 +32,10 @@ app = FastAPI(title="FarforDecor Event Planning API")
 
 # Mount static files from warehouse backend
 # Single source of truth for all product images
-# Database stores paths like: static/images/products/image/59/kreslo-2.jpg
+# Database stores paths like: 
+#   - static/images/products/image/59/kreslo-2.jpg (old format)
+#   - uploads/products/FI8685_1764271319.png (new format)
+
 WAREHOUSE_STATIC_PATH = "/app/warehouse_admin/backend/static"
 if os.path.exists(WAREHOUSE_STATIC_PATH):
     app.mount(
@@ -43,6 +46,17 @@ if os.path.exists(WAREHOUSE_STATIC_PATH):
     logger.info(f"✅ Mounted warehouse static directory: {WAREHOUSE_STATIC_PATH}")
 else:
     logger.warning(f"⚠️ Warehouse static directory not found: {WAREHOUSE_STATIC_PATH}")
+
+WAREHOUSE_UPLOADS_PATH = "/app/warehouse_admin/backend/uploads"
+if os.path.exists(WAREHOUSE_UPLOADS_PATH):
+    app.mount(
+        "/uploads",
+        StaticFiles(directory=WAREHOUSE_UPLOADS_PATH),
+        name="uploads"
+    )
+    logger.info(f"✅ Mounted warehouse uploads directory: {WAREHOUSE_UPLOADS_PATH}")
+else:
+    logger.warning(f"⚠️ Warehouse uploads directory not found: {WAREHOUSE_UPLOADS_PATH}")
 
 # Create API router with /api prefix
 api_router = APIRouter(prefix="/api")
