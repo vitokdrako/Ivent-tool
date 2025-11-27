@@ -69,15 +69,25 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
 
   const handleImageUrlChange = (e) => {
     const url = e.target.value;
+    
+    // Clear preview if URL is empty
+    if (!url) {
+      setImagePreview(null);
+      setImageFile(null);
+      setFormData({
+        ...formData,
+        cover_image: ''
+      });
+      return;
+    }
+    
+    // Set formData and preview
     setFormData({
       ...formData,
       cover_image: url
     });
-    
-    if (url) {
-      setImagePreview(url);
-      setImageFile(null);
-    }
+    setImagePreview(url);
+    setImageFile(null);
   };
 
   const handleRemoveImage = () => {
