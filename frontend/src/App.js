@@ -583,15 +583,16 @@ const EventPlannerPage = () => {
             {/* Board Content */}
             {activeBoard ? (
               <>
-                <div style={{padding: '0 22px 18px', borderBottom: '1px solid #f0f0f0'}}>
-                  {/* Cover Image */}
+                {/* Compact Board Info - Оптимізовано */}
+                <div style={{padding: '12px 18px', borderBottom: '1px solid #f0f0f0'}}>
+                  {/* Cover Image - Менше */}
                   {activeBoard.cover_image && (
                     <div style={{
                       width: '100%',
-                      height: '120px',
+                      height: '80px',
                       borderRadius: '4px',
                       overflow: 'hidden',
-                      marginBottom: '12px',
+                      marginBottom: '10px',
                       background: '#f5f5f5'
                     }}>
                       <img 
@@ -609,11 +610,12 @@ const EventPlannerPage = () => {
                     </div>
                   )}
                   
-                  <h3 className="font-bold mb-2" style={{fontSize: '14px', color: '#333'}}>{activeBoard.board_name}</h3>
-                  <p className="fd-label mb-3">
-                    Івент: {activeBoard.event_date || 'Дата не вказана'}
+                  <h3 className="font-bold mb-1" style={{fontSize: '13px', color: '#333', lineHeight: '1.3'}}>{activeBoard.board_name}</h3>
+                  <p className="fd-label mb-2" style={{fontSize: '10px'}}>
+                    {activeBoard.event_date || 'Дата не вказана'}
                   </p>
                   
+                  {/* Компактний DateRangePicker */}
                   <DateRangePicker
                     startDate={activeBoard.rental_start_date}
                     endDate={activeBoard.rental_end_date}
@@ -622,8 +624,8 @@ const EventPlannerPage = () => {
                   />
                   
                   {activeBoard.rental_days && (
-                    <p className="text-center mt-2" style={{fontSize: '11px', color: '#999'}}>
-                      🕐 {activeBoard.rental_days} днів оренди
+                    <p className="text-center mt-1" style={{fontSize: '10px', color: '#999'}}>
+                      {activeBoard.rental_days} днів оренди
                     </p>
                   )}
                 </div>
