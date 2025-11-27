@@ -274,12 +274,13 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
         >
           {/* Empty state */}
           {elements.length === 0 && (
-            <div className="fd-empty" style={{paddingTop: '200px'}}>
-              <div className="fd-empty-icon">🎨</div>
-              <div className="fd-empty-title">Почніть створювати мудборд</div>
-              <div className="fd-empty-text">
-                Клацніть на товар у правій панелі щоб додати його на canvas.<br/>
-                Використовуйте кнопку "📝 Додати текст" для підписів.
+            <div className="fd-empty" style={{paddingTop: '200px', textAlign: 'center'}}>
+              <div style={{fontSize: '18px', fontWeight: '600', color: '#999', marginBottom: '12px'}}>
+                Почніть створювати мудборд
+              </div>
+              <div className="fd-empty-text" style={{fontSize: '14px', color: '#999', lineHeight: '1.6'}}>
+                Клацніть на товар у правій панелі щоб додати його на canvas<br/>
+                Використовуйте інструменти зліва для налаштування
               </div>
             </div>
           )}
