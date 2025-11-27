@@ -449,9 +449,8 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
                 ))}
               </div>
             ) : (
-              <div className="fd-empty" style={{paddingTop: '100px'}}>
-                <div className="fd-empty-icon" style={{fontSize: '48px'}}>📦</div>
-                <div className="fd-empty-title" style={{fontSize: '14px', marginTop: '12px'}}>
+              <div className="fd-empty" style={{paddingTop: '100px', textAlign: 'center'}}>
+                <div style={{fontSize: '14px', fontWeight: '600', color: '#999', marginBottom: '8px'}}>
                   Немає товарів
                 </div>
                 <div className="fd-empty-text" style={{fontSize: '12px', color: '#999'}}>
