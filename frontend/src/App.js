@@ -66,10 +66,10 @@ const LoginPage = () => {
             />
           </div>
           {/* Company Name */}
-          <h1 className="text-2xl font-bold mb-1 fd-uppercase-wide" style={{color: '#333', letterSpacing: '0.1em'}}>
+          <h1 className="text-2xl font-bold mb-1" style={{color: '#333', letterSpacing: '0.05em'}}>
             FarforDecorOrenda
           </h1>
-          <p className="text-xs fd-uppercase" style={{color: '#999', marginTop: '8px'}}>Event Planning Platform</p>
+          <p className="text-xs" style={{color: '#999', marginTop: '8px', textTransform: 'uppercase'}}>Event Planning Platform</p>
         </div>
 
         <div className="flex gap-2 mb-8">
