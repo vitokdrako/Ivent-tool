@@ -10,13 +10,14 @@ import uuid
 import logging
 
 from database import get_db
-from models import Customer, Product, Category, EventBoard, EventBoardItem, SoftReservation, ProductReservation
+from models import Customer, Product, Category, EventBoard, EventBoardItem, SoftReservation, ProductReservation, Order
 from schemas import (
     CustomerRegister, CustomerLogin, Token, CustomerResponse,
     ProductListItem, ProductDetail,
     CategoryResponse, EventBoardCreate, EventBoardUpdate,
     EventBoardResponse, EventBoardItemCreate, EventBoardItemUpdate,
-    EventBoardItemResponse, AvailabilityCheckRequest, AvailabilityCheckResponse
+    EventBoardItemResponse, AvailabilityCheckRequest, AvailabilityCheckResponse,
+    OrderCreate, OrderResponse
 )
 from auth import (
     get_password_hash, authenticate_customer, create_access_token,
