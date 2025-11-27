@@ -541,28 +541,28 @@ const EventPlannerPage = () => {
         {/* Side Panel - Event Board */}
         {isSidePanelOpen && (
           <div className="w-96 fd-side-panel flex flex-col fixed right-0 h-[calc(100vh-73px)]">
-            {/* Panel Header */}
-            <div className="fd-side-header flex items-center justify-between" style={{paddingBottom: '10px', marginBottom: '14px'}}>
-              <h2 className="fd-side-title">МІЙ ІВЕНТ</h2>
+            {/* Compact Panel Header - Оптимізовано */}
+            <div className="fd-side-header flex items-center justify-between" style={{padding: '14px 18px 10px', marginBottom: '0', borderBottom: '1px solid #f0f0f0'}}>
+              <h2 className="fd-side-title" style={{fontSize: '13px'}}>МІЙ ІВЕНТ</h2>
               <button
                 onClick={toggleSidePanel}
                 className="fd-btn"
-                style={{fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#999', background: 'none', border: 'none', padding: 0}}
+                style={{fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#999', background: 'none', border: 'none', padding: 0}}
               >
                 згорнути
               </button>
             </div>
 
-            {/* Board Selector */}
-            <div style={{padding: '0 22px 18px'}}>
-              <label className="fd-label">Мудборд</label>
+            {/* Compact Board Selector - Оптимізовано */}
+            <div style={{padding: '12px 18px 12px', background: '#fafafa'}}>
               <select
                 value={activeBoard?.id || ''}
                 onChange={(e) => {
                   const board = boards.find(b => b.id === e.target.value);
                   setActiveBoard(board);
                 }}
-                className="w-full fd-select mb-3"
+                className="w-full fd-select mb-2"
+                style={{fontSize: '12px', padding: '8px 12px'}}
               >
                 <option value="">Виберіть мудборд</option>
                 {boards.map((board) => (
@@ -574,8 +574,9 @@ const EventPlannerPage = () => {
               <button
                 onClick={() => setShowNewBoardModal(true)}
                 className="w-full fd-btn fd-btn-primary"
+                style={{padding: '8px 12px', fontSize: '11px'}}
               >
-                + створити новий івент
+                + створити івент
               </button>
             </div>
 
