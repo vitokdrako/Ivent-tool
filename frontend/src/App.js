@@ -188,26 +188,35 @@ const EventPlannerPage = () => {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
   const [showNewBoardModal, setShowNewBoardModal] = useState(false);
   const [showCanvas, setShowCanvas] = useState(false);
+
+  const ITEMS_PER_PAGE = 50;
 
   useEffect(() => {
     loadInitialData();
   }, []);
 
+  useEffect(() => {
+    // Reset products when filters change
+    setProducts([]);
+    setPage(0);
+    setHasMore(true);
+    loadProducts(0);
+  }, [searchTerm, selectedCategory, selectedSubcategory, selectedColor]);
+
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      // Завантажити ВСІ товари (6668 в базі)
-      // Збільшено з 200 до 10000 щоб показати всі підкатегорії
-      const [productsData, categoriesData, subcategoriesData, boardsData] = await Promise.all([
-        api.get('/products?limit=10000').then(r => r.data),
+      const [categoriesData, subcategoriesData, boardsData] = await Promise.all([
         api.get('/categories').then(r => r.data),
         api.get('/subcategories').then(r => r.data),
         api.get('/boards').then(r => r.data),
       ]);
       
-      setProducts(productsData);
       setCategories(categoriesData);
       setAllSubcategories(subcategoriesData);
       setBoards(boardsData);
@@ -215,10 +224,54 @@ const EventPlannerPage = () => {
       if (boardsData.length > 0) {
         setActiveBoard(boardsData[0]);
       }
+
+      // Load first page of products
+      await loadProducts(0);
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadProducts = async (pageNum) => {
+    if (loadingMore) return;
+
+    try {
+      setLoadingMore(true);
+      
+      const params = new URLSearchParams({
+        skip: pageNum * ITEMS_PER_PAGE,
+        limit: ITEMS_PER_PAGE,
+      });
+
+      if (searchTerm) params.append('search', searchTerm);
+      if (selectedCategory) {
+        const category = categories.find(c => c.name === selectedCategory);
+        if (category) params.append('category_id', category.category_id);
+      }
+      if (selectedColor) params.append('color', selectedColor);
+
+      const productsData = await api.get(`/products?${params.toString()}`).then(r => r.data);
+      
+      if (pageNum === 0) {
+        setProducts(productsData);
+      } else {
+        setProducts(prev => [...prev, ...productsData]);
+      }
+
+      setHasMore(productsData.length === ITEMS_PER_PAGE);
+      setPage(pageNum);
+    } catch (error) {
+      console.error('Failed to load products:', error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (hasMore && !loadingMore) {
+      loadProducts(page + 1);
     }
   };
 
