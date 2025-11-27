@@ -61,19 +61,23 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
           <div className="product-card-image-placeholder">🎨</div>
         )}
         
-        {/* Availability badge overlay */}
-        {boardDates?.startDate && boardDates?.endDate && (
-          <div className="product-availability-badge">
-            {loading ? (
-              <span>⏳ Перевірка...</span>
-            ) : availability ? (
-              <AvailabilityBadge
-                available={availability.available_quantity}
-                total={product.quantity}
-                requested={1}
-                compact={true}
-              />
-            ) : null}
+        {/* Compact availability counter in corner */}
+        {product.available !== undefined && (
+          <div style={{
+            position: 'absolute',
+            top: '8px',
+            right: '8px',
+            padding: '4px 10px',
+            borderRadius: '12px',
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(4px)',
+            fontSize: '11px',
+            fontWeight: '600',
+            color: product.available > 0 ? '#2e7d32' : '#999',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            border: `1px solid ${product.available > 0 ? '#a5d6a7' : '#e0e0e0'}`
+          }}>
+            {product.available} шт
           </div>
         )}
       </div>
@@ -84,57 +88,19 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
         </h3>
         <p className="product-card-sku">{product.sku}</p>
         
-        {/* Availability info */}
-        {product.available !== undefined && (
-          <div style={{
-            display: 'flex',
-            gap: '8px',
-            alignItems: 'center',
-            marginTop: '6px',
-            fontSize: '11px',
-            color: '#666'
-          }}>
-            <span style={{
-              padding: '2px 8px',
-              borderRadius: '12px',
-              background: product.available > 0 ? '#e8f5e9' : '#ffebee',
-              color: product.available > 0 ? '#2e7d32' : '#c62828',
-              fontWeight: '500'
-            }}>
-              {product.available > 0 ? `✓ Доступно: ${product.available}` : '✗ Недоступно'}
-            </span>
-            {product.reserved > 0 && (
-              <span style={{color: '#999', fontSize: '10px'}}>
-                ({product.reserved} в резерві)
-              </span>
-            )}
-          </div>
-        )}
-        
         <div className="product-card-info">
           <span className="product-card-price">
             ₴{product.rental_price}
             <span className="product-card-price-unit">/день</span>
           </span>
           <span className="product-card-quantity">
-            {product.quantity} шт
+            Всього: {product.quantity} шт
           </span>
         </div>
-
-        {/* Full availability info */}
-        {boardDates?.startDate && boardDates?.endDate && availability && (
-          <div className="product-card-availability">
-            <AvailabilityBadge
-              available={availability.available_quantity}
-              total={product.quantity}
-              requested={1}
-            />
-          </div>
-        )}
         
         <button
           onClick={handleAdd}
-          disabled={isAdding || (availability && !availability.is_available)}
+          disabled={isAdding || (boardDates?.startDate && boardDates?.endDate && availability && !availability.is_available)}
           className={`product-card-button ${isAdding ? 'adding' : ''}`}
         >
           {isAdding ? 'Додавання...' : 'Додати в підбірку'}
