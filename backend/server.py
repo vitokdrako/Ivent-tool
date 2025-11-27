@@ -254,6 +254,9 @@ async def get_products(
     if max_price:
         query = query.where(Product.rental_price <= max_price)
     
+    # Sort by product_id DESC to show latest added products first
+    query = query.order_by(Product.product_id.desc())
+    
     # Pagination
     query = query.offset(skip).limit(limit)
     
