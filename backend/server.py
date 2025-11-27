@@ -137,6 +137,53 @@ async def get_categories(
     
     return categories
 
+@api_router.get("/subcategories")
+async def get_subcategories(
+    category_name: Optional[str] = None,
+    db: AsyncSession = Depends(get_db)
+):
+    """Отримати список підкатегорій з продуктів"""
+    
+    # Build query
+    query = select(Product.category_name, Product.subcategory_name).where(
+        and_(
+            Product.status == 1,
+            Product.subcategory_name.isnot(None),
+            Product.subcategory_name != ''
+        )
+    ).distinct()
+    
+    # Filter by category if provided
+    if category_name:
+        query = query.where(Product.category_name == category_name)
+    
+    result = await db.execute(query)
+    rows = result.all()
+    
+    # Build response
+    if category_name:
+        # Return just subcategory names for a specific category
+        subcategories = sorted(set(row.subcategory_name for row in rows if row.subcategory_name))
+        return {"category": category_name, "subcategories": subcategories}
+    else:
+        # Return all category-subcategory pairs
+        category_subcategories = {}
+        for row in rows:
+            if row.category_name not in category_subcategories:
+                category_subcategories[row.category_name] = set()
+            if row.subcategory_name:
+                category_subcategories[row.category_name].add(row.subcategory_name)
+        
+        # Convert to list format
+        result_list = []
+        for cat_name, subcats in sorted(category_subcategories.items()):
+            result_list.append({
+                "category": cat_name,
+                "subcategories": sorted(list(subcats))
+            })
+        
+        return result_list
+
 # ============================================================================
 # PRODUCTS ENDPOINTS
 # ============================================================================
