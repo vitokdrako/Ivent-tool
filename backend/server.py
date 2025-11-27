@@ -148,6 +148,7 @@ async def get_subcategories(
     query = select(Product.category_name, Product.subcategory_name).where(
         and_(
             Product.status == 1,
+            Product.category_name.isnot(None),
             Product.subcategory_name.isnot(None),
             Product.subcategory_name != ''
         )
@@ -169,17 +170,18 @@ async def get_subcategories(
         # Return all category-subcategory pairs
         category_subcategories = {}
         for row in rows:
-            if row.category_name not in category_subcategories:
-                category_subcategories[row.category_name] = set()
-            if row.subcategory_name:
+            # Skip if category_name is None
+            if row.category_name and row.subcategory_name:
+                if row.category_name not in category_subcategories:
+                    category_subcategories[row.category_name] = set()
                 category_subcategories[row.category_name].add(row.subcategory_name)
         
         # Convert to list format
         result_list = []
-        for cat_name, subcats in sorted(category_subcategories.items()):
+        for cat_name in sorted(category_subcategories.keys()):
             result_list.append({
                 "category": cat_name,
-                "subcategories": sorted(list(subcats))
+                "subcategories": sorted(list(category_subcategories[cat_name]))
             })
         
         return result_list
