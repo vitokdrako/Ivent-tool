@@ -275,6 +275,34 @@ const EventPlannerPage = () => {
     }
   };
 
+  const handleSubmitOrder = async (orderData) => {
+    if (!activeBoard) return;
+    
+    try {
+      const response = await api.post(`/boards/${activeBoard.id}/convert-to-order`, orderData);
+      
+      // Показати успіх
+      alert(`✅ Замовлення успішно оформлено!\n\nНомер замовлення: ${response.data.order_number}\n\nСтатус: Очікує підтвердження\n\nМи зв'яжемось з вами найближчим часом.`);
+      
+      // Закрити модалку
+      setShowOrderModal(false);
+      
+      // Оновити board
+      const updatedBoard = await api.get(`/boards/${activeBoard.id}`).then(r => r.data);
+      setActiveBoard(updatedBoard);
+      
+      // Оновити список boards
+      const boardsData = await api.get('/boards').then(r => r.data);
+      setBoards(boardsData);
+      
+    } catch (error) {
+      console.error('Order submission error:', error);
+      const errorMsg = error.response?.data?.detail || 'Помилка при оформленні замовлення';
+      alert(`❌ ${errorMsg}`);
+      throw error;
+    }
+  };
+
   const handleCreateBoard = async (boardData) => {
     try {
       const newBoard = await api.post('/boards', boardData).then(r => r.data);
