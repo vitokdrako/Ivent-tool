@@ -30,7 +30,7 @@ const ProductFilters = ({
           size="1"
           title={`${categories.length} категорій доступно`}
         >
-          <option value="">📦 Всі категорії</option>
+          <option value="">Всі категорії</option>
           {categories.map((cat, index) => (
             <option key={index} value={cat.name}>
               {cat.name}
