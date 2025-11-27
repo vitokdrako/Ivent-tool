@@ -198,8 +198,10 @@ const EventPlannerPage = () => {
   const loadInitialData = async () => {
     try {
       setLoading(true);
+      // Завантажити ВСІ товари (6668 в базі)
+      // Збільшено з 200 до 10000 щоб показати всі підкатегорії
       const [productsData, categoriesData, subcategoriesData, boardsData] = await Promise.all([
-        api.get('/products?limit=200').then(r => r.data),
+        api.get('/products?limit=10000').then(r => r.data),
         api.get('/categories').then(r => r.data),
         api.get('/subcategories').then(r => r.data),
         api.get('/boards').then(r => r.data),
