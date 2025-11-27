@@ -460,7 +460,7 @@ const EventPlannerPage = () => {
               </div>
               
               <ProductFilters
-                categories={uniqueCategories}
+                categories={allCategories}
                 subcategories={availableSubcategories}
                 colors={availableColors}
                 selectedCategory={selectedCategory}
