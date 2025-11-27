@@ -7,6 +7,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
   const [background, setBackground] = useState(board.canvasLayout?.background || '#ffffff');
   const [textMode, setTextMode] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const canvasRef = useRef(null);
 
   // Initialize elements from board items if not loaded
