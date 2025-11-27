@@ -132,9 +132,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 10px;
+    padding-top: 8px;
     border-top: 1px solid var(--corp-border);
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .board-item-price-calculation {
@@ -142,7 +142,7 @@
 }
 
 .board-item-price-total {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--corp-text-dark);
 }
