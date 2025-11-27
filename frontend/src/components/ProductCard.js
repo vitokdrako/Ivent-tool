@@ -73,11 +73,11 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
             backdropFilter: 'blur(4px)',
             fontSize: '11px',
             fontWeight: '600',
-            color: product.available > 0 ? '#2e7d32' : '#999',
+            color: product.available > 0 ? '#2e7d32' : '#d32f2f',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: `1px solid ${product.available > 0 ? '#a5d6a7' : '#e0e0e0'}`
+            border: `1px solid ${product.available > 0 ? '#a5d6a7' : '#ffcdd2'}`
           }}>
-            {product.available} шт
+            {product.available}/{product.quantity}
           </div>
         )}
       </div>
