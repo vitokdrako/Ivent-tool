@@ -1211,11 +1211,9 @@ async def convert_board_to_order(
         db.add(hard_reservation)
     
     # 8. Видалити soft reservations
-    delete_soft = await db.execute(
-        select(SoftReservation).where(SoftReservation.board_id == board_id)
+    await db.execute(
+        delete(SoftReservation).where(SoftReservation.board_id == board_id)
     )
-    for soft_res in delete_soft.scalars().all():
-        await db.delete(soft_res)
     
     # 9. Оновити Event Board
     board.converted_to_order_id = order.order_id
