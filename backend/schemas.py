@@ -48,6 +48,10 @@ class ProductListItem(BaseModel):
     frozen_quantity: int
     image_url: Optional[str]
     status: int
+    
+    # Статистика доступності (як у warehouse)
+    reserved: Optional[int] = 0  # Зарезервовано в мудбордах
+    available: Optional[int] = 0  # Реально доступно = quantity - frozen - reserved
 
 class ProductDetail(ProductListItem):
     description: Optional[str]
