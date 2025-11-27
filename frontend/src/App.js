@@ -453,13 +453,17 @@ const EventPlannerPage = () => {
             <div className="w-px h-5" style={{background: '#e6e6e6'}}></div>
             <span className="text-xs" style={{color: '#999', textTransform: 'uppercase'}}>Event Planning Platform</span>
           </div>
-          <div className="flex items-center gap-6">
-            <span className="text-sm" style={{color: '#555'}}>
-              {user?.firstname} {user?.lastname}
-            </span>
+          <div className="flex items-center gap-3">
+            <button
+              className="fd-btn fd-btn-secondary"
+              style={{fontSize: '12px'}}
+            >
+              Особистий кабінет
+            </button>
             <button
               onClick={logout}
               className="fd-btn fd-btn-secondary"
+              style={{fontSize: '12px'}}
             >
               Вийти
             </button>
