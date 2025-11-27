@@ -81,7 +81,7 @@ const ProductFilters = ({
           size="1"
           title={`${colors.length} кольорів доступно`}
         >
-          <option value="">🎨 Всі кольори</option>
+          <option value="">Всі кольори</option>
           {colors.map((color, index) => (
             <option key={index} value={color}>
               {color}
