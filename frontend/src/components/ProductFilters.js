@@ -19,9 +19,10 @@ const ProductFilters = ({
         <select
           value={selectedCategory || ''}
           onChange={(e) => onCategoryChange(e.target.value || null)}
-          className="filter-select"
+          className="filter-select filter-select-scrollable"
+          size="1"
         >
-          <option value="">Всі категорії</option>
+          <option value="">📦 Всі категорії</option>
           {categories.map((cat, index) => (
             <option key={index} value={cat.name}>
               {cat.name}
@@ -35,10 +36,11 @@ const ProductFilters = ({
         <select
           value={selectedSubcategory || ''}
           onChange={(e) => onSubcategoryChange(e.target.value || null)}
-          className="filter-select"
+          className="filter-select filter-select-scrollable"
           disabled={!subcategories.length}
+          size="1"
         >
-          <option value="">Всі підкатегорії</option>
+          <option value="">📋 Всі підкатегорії</option>
           {subcategories.map((subcat, index) => (
             <option key={index} value={subcat}>
               {subcat}
@@ -52,15 +54,60 @@ const ProductFilters = ({
         <select
           value={selectedColor || ''}
           onChange={(e) => onColorChange(e.target.value || null)}
-          className="filter-select"
+          className="filter-select filter-select-scrollable"
+          size="1"
         >
-          <option value="">Всі кольори</option>
+          <option value="">🎨 Всі кольори</option>
           {colors.map((color, index) => (
             <option key={index} value={color}>
               {color}
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Active Filters Display */}
+      <div className="filter-active-tags">
+        {selectedCategory && (
+          <button 
+            className="filter-tag"
+            onClick={() => onCategoryChange(null)}
+            title="Видалити фільтр"
+          >
+            {selectedCategory} ✕
+          </button>
+        )}
+        {selectedSubcategory && (
+          <button 
+            className="filter-tag"
+            onClick={() => onSubcategoryChange(null)}
+            title="Видалити фільтр"
+          >
+            {selectedSubcategory} ✕
+          </button>
+        )}
+        {selectedColor && (
+          <button 
+            className="filter-tag"
+            onClick={() => onColorChange(null)}
+            title="Видалити фільтр"
+          >
+            {selectedColor} ✕
+          </button>
+        )}
+        {(selectedCategory || selectedSubcategory || selectedColor) && (
+          <button 
+            className="filter-tag filter-tag-clear"
+            onClick={() => {
+              onCategoryChange(null);
+              onSubcategoryChange(null);
+              onColorChange(null);
+            }}
+            title="Очистити всі фільтри"
+          >
+            Очистити всі
+          </button>
+        )}
       </div>
     </div>
   );
