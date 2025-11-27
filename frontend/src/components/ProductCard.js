@@ -49,6 +49,7 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
           <img
             src={getImageUrl()}
             alt={product.name}
+            loading="lazy"
             onError={(e) => {
               e.target.style.display = 'none';
               const placeholder = document.createElement('div');
