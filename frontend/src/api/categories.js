@@ -6,4 +6,15 @@ export const categoriesAPI = {
     const response = await api.get('/categories', { params });
     return response.data;
   },
+
+  getSubcategories: async (categoryName) => {
+    const params = categoryName ? { category_name: categoryName } : {};
+    const response = await api.get('/subcategories', { params });
+    return response.data;
+  },
+
+  getAllSubcategories: async () => {
+    const response = await api.get('/subcategories');
+    return response.data;
+  },
 };
