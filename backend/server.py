@@ -199,7 +199,7 @@ async def get_products(
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
     skip: int = 0,
-    limit: int = 1000,  # Збільшено з 50 до 1000 як у warehouse
+    limit: int = 10000,  # Збільшено для завантаження всіх товарів (6668)
     include_availability: bool = True,  # Додано опція для розрахунку доступності
     db: AsyncSession = Depends(get_db)
 ):
