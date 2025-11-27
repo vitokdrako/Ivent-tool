@@ -347,6 +347,13 @@ const EventPlannerPage = () => {
   const availableSubcategories = React.useMemo(() => {
     if (!selectedCategory) return [];
     
+    // Find subcategories from API data
+    const categoryData = allSubcategories.find(item => item.category === selectedCategory);
+    if (categoryData && categoryData.subcategories) {
+      return categoryData.subcategories;
+    }
+    
+    // Fallback to products if not found in API
     const subcats = new Set();
     products.forEach(p => {
       if (p.category_name === selectedCategory && p.subcategory_name) {
@@ -354,7 +361,7 @@ const EventPlannerPage = () => {
       }
     });
     return Array.from(subcats).sort((a, b) => a.localeCompare(b, 'uk'));
-  }, [products, selectedCategory]);
+  }, [allSubcategories, products, selectedCategory]);
 
   // Get all available colors
   const availableColors = React.useMemo(() => {
