@@ -32,7 +32,7 @@ app = FastAPI(title="FarforDecor Event Planning API")
 
 # Mount static files from warehouse backend
 # Single source of truth for all product images
-WAREHOUSE_UPLOADS_PATH = "/home/farforre/farforrent.com.ua/rentalhub/backend/uploads"
+WAREHOUSE_UPLOADS_PATH = "/app/warehouse_admin/backend/uploads"
 if os.path.exists(WAREHOUSE_UPLOADS_PATH):
     app.mount(
         "/uploads",
