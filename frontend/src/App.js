@@ -656,11 +656,12 @@ const EventPlannerPage = () => {
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center">
-                <div className="fd-empty">
-                  <div className="fd-empty-icon">🎨</div>
-                  <div className="fd-empty-title">Створіть перший мудборд</div>
-                  <div className="fd-empty-text">
-                    Додавайте позиції з каталогу ліворуч,<br/>щоб зібрати підбірку для клієнта.
+                <div className="fd-empty" style={{textAlign: 'center'}}>
+                  <div style={{fontSize: '16px', fontWeight: '600', color: '#999', marginBottom: '12px'}}>
+                    Створіть перший мудборд
+                  </div>
+                  <div className="fd-empty-text" style={{fontSize: '13px', color: '#999', lineHeight: '1.6'}}>
+                    Додавайте позиції з каталогу ліворуч,<br/>щоб зібрати підбірку для клієнта
                   </div>
                 </div>
               </div>
