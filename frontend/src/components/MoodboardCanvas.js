@@ -268,6 +268,95 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
             overflowY: 'auto',
             padding: '16px'
           }}>
+            {/* Layout Templates */}
+            <div style={{marginBottom: '20px'}}>
+              <button
+                onClick={() => setShowTemplates(!showTemplates)}
+                className="fd-btn fd-btn-secondary"
+                style={{width: '100%'}}
+              >
+                Шаблони розташування
+              </button>
+              
+              {showTemplates && (
+                <div style={{
+                  marginTop: '12px',
+                  padding: '12px',
+                  background: '#f9f9f9',
+                  borderRadius: '4px',
+                  border: '1px solid #e8e8e8',
+                  maxHeight: '400px',
+                  overflowY: 'auto'
+                }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '8px'
+                  }}>
+                    {LAYOUT_TEMPLATES.map((template) => (
+                      <button
+                        key={template.id}
+                        onClick={() => handleApplyTemplate(template)}
+                        style={{
+                          padding: '8px',
+                          background: '#fff',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          position: 'relative',
+                          aspectRatio: '1'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = '#333';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = '#ddd';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        {/* Visual preview of template */}
+                        <div style={{position: 'relative', width: '100%', height: '100%'}}>
+                          {template.cells.map((cell, idx) => (
+                            <div
+                              key={idx}
+                              style={{
+                                position: 'absolute',
+                                left: `${cell.x}%`,
+                                top: `${cell.y}%`,
+                                width: `${cell.width}%`,
+                                height: `${cell.height}%`,
+                                border: '1px solid #ccc',
+                                background: '#f5f5f5',
+                                boxSizing: 'border-box'
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '4px',
+                          left: '4px',
+                          right: '4px',
+                          fontSize: '9px',
+                          color: '#666',
+                          textAlign: 'center',
+                          background: 'rgba(255,255,255,0.9)',
+                          padding: '2px',
+                          borderRadius: '2px'
+                        }}>
+                          {template.name}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div style={{height: '1px', background: '#e8e8e8', margin: '16px 0'}}></div>
+
             {/* Background Color */}
             <div style={{marginBottom: '20px'}}>
               <button
