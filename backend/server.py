@@ -209,12 +209,14 @@ async def get_subcategories(
 async def get_products(
     search: Optional[str] = None,
     category_id: Optional[int] = None,
+    category_name: Optional[str] = None,
+    subcategory_name: Optional[str] = None,
     color: Optional[str] = None,
     material: Optional[str] = None,
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
     skip: int = 0,
-    limit: int = 10000,  # Збільшено для завантаження всіх товарів (6668)
+    limit: int = 50,  # Зменшено для lazy loading
     include_availability: bool = True,  # Додано опція для розрахунку доступності
     db: AsyncSession = Depends(get_db)
 ):
