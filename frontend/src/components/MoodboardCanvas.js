@@ -111,7 +111,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
             ← Назад
           </button>
           <h2 className="font-bold" style={{fontSize: '18px', color: '#333'}}>
-            📋 {board.board_name} - Візуальний мудборд
+            {board.board_name} - Візуальний мудборд
           </h2>
         </div>
         <div className="flex items-center gap-3">
@@ -125,65 +125,134 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
             +
           </button>
           <button onClick={handleSaveCanvas} className="fd-btn fd-btn-black">
-            💾 Зберегти
+            Зберегти
           </button>
         </div>
       </div>
 
-      {/* Main Content - Canvas + Right Sidebar */}
+      {/* Main Content - Left Tools + Canvas + Right Products */}
       <div className="flex flex-1 overflow-hidden">
         
-        {/* Left Side - Canvas Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Toolbar */}
-          <div style={{background: '#fff', borderBottom: '1px solid #e3e3e3', padding: '12px 32px'}}>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="fd-label">🎨 Фон:</span>
-                <input
-                  type="color"
-                  value={background}
-                  onChange={(e) => setBackground(e.target.value)}
-                  className="fd-input"
-                  style={{width: '60px', height: '32px', padding: '2px'}}
-                />
-                <button
-                  onClick={() => setBackground('#ffffff')}
-                  className="fd-btn fd-btn-small"
-                  style={{background: '#fff', border: '1px solid #ddd'}}
-                >
-                  Білий
-                </button>
-                <button
-                  onClick={() => setBackground('#f5f5dc')}
-                  className="fd-btn fd-btn-small"
-                  style={{background: '#f5f5dc', border: '1px solid #ddd'}}
-                >
-                  Бежевий
-                </button>
-              </div>
-
-              <div className="w-px h-6" style={{background: '#e3e3e3'}}></div>
-
-              <button onClick={handleAddText} className="fd-btn fd-btn-secondary">
-                📝 Додати текст
-              </button>
-
-              {selectedId && (
-                <>
-                  <div className="w-px h-6" style={{background: '#e3e3e3'}}></div>
-                  <button
-                    onClick={() => handleDeleteElement(selectedId)}
-                    className="fd-btn fd-btn-small"
-                    style={{color: '#c62828', border: '1px solid #c62828'}}
-                  >
-                    🗑️ Видалити
-                  </button>
-                </>
-              )}
-            </div>
+        {/* Left Sidebar - Tools */}
+        <div style={{
+          width: '240px',
+          background: '#fff',
+          borderRight: '1px solid #e3e3e3',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}>
+          {/* Tools Header */}
+          <div style={{
+            padding: '20px',
+            borderBottom: '1px solid #f0f0f0',
+            background: '#fafafa'
+          }}>
+            <h3 className="font-bold" style={{fontSize: '14px', color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em'}}>
+              Інструменти
+            </h3>
           </div>
 
+          {/* Tools List */}
+          <div style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '16px'
+          }}>
+            {/* Background Color */}
+            <div style={{marginBottom: '20px'}}>
+              <button
+                onClick={() => setShowColorPicker(!showColorPicker)}
+                className="fd-btn fd-btn-secondary"
+                style={{width: '100%', justifyContent: 'space-between', display: 'flex', alignItems: 'center'}}
+              >
+                <span>Фон canvas</span>
+                <div style={{
+                  width: '24px',
+                  height: '24px',
+                  background: background,
+                  border: '2px solid #ddd',
+                  borderRadius: '4px'
+                }}></div>
+              </button>
+              
+              {showColorPicker && (
+                <div style={{
+                  marginTop: '12px',
+                  padding: '12px',
+                  background: '#f9f9f9',
+                  borderRadius: '4px',
+                  border: '1px solid #e8e8e8'
+                }}>
+                  <input
+                    type="color"
+                    value={background}
+                    onChange={(e) => setBackground(e.target.value)}
+                    style={{width: '100%', height: '40px', border: 'none', cursor: 'pointer'}}
+                  />
+                  <div style={{display: 'flex', gap: '8px', marginTop: '12px'}}>
+                    <button
+                      onClick={() => setBackground('#ffffff')}
+                      style={{
+                        flex: 1,
+                        padding: '8px',
+                        background: '#ffffff',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Білий
+                    </button>
+                    <button
+                      onClick={() => setBackground('#f5f5dc')}
+                      style={{
+                        flex: 1,
+                        padding: '8px',
+                        background: '#f5f5dc',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Бежевий
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div style={{height: '1px', background: '#e8e8e8', margin: '16px 0'}}></div>
+
+            {/* Add Text */}
+            <button
+              onClick={handleAddText}
+              className="fd-btn fd-btn-secondary"
+              style={{width: '100%', marginBottom: '12px'}}
+            >
+              Додати текст
+            </button>
+
+            {/* Delete Element */}
+            {selectedId && (
+              <>
+                <div style={{height: '1px', background: '#e8e8e8', margin: '16px 0'}}></div>
+                <button
+                  onClick={() => handleDeleteElement(selectedId)}
+                  className="fd-btn fd-btn-small"
+                  style={{color: '#c62828', border: '1px solid #c62828', width: '100%'}}
+                >
+                  Видалити елемент
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Center - Canvas Area */}
+        <div className="flex-1 flex flex-col">
           {/* Canvas */}
           <div className="flex-1 overflow-auto" style={{background: '#e8e8e8', padding: '40px'}}>
         <div
