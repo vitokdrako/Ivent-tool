@@ -865,11 +865,13 @@ async def _create_or_update_soft_reservation(
     expires_at = datetime.utcnow() + timedelta(minutes=int(os.getenv('SOFT_RESERVATION_MINUTES', '30')))
     
     if reservation:
+        old_quantity = reservation.quantity
         reservation.quantity = quantity
         reservation.reserved_from = board.rental_start_date
         reservation.reserved_until = board.rental_end_date
         reservation.expires_at = expires_at
         reservation.status = 'active'
+        logger.info(f"Soft reservation updated: product {product.product_id}, quantity {old_quantity} → {quantity}")
     else:
         reservation = SoftReservation(
             id=str(uuid.uuid4()),
@@ -884,6 +886,7 @@ async def _create_or_update_soft_reservation(
             created_at=datetime.utcnow()
         )
         db.add(reservation)
+        logger.info(f"Soft reservation created: product {product.product_id}, quantity {quantity}")
     
     await db.commit()
 
