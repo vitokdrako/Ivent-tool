@@ -246,10 +246,8 @@ const EventPlannerPage = () => {
       });
 
       if (searchTerm) params.append('search', searchTerm);
-      if (selectedCategory) {
-        const category = categories.find(c => c.name === selectedCategory);
-        if (category) params.append('category_id', category.category_id);
-      }
+      if (selectedCategory) params.append('category_name', selectedCategory);
+      if (selectedSubcategory) params.append('subcategory_name', selectedSubcategory);
       if (selectedColor) params.append('color', selectedColor);
 
       const productsData = await api.get(`/products?${params.toString()}`).then(r => r.data);
