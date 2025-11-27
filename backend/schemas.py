@@ -159,4 +159,51 @@ class AvailabilityCheckResponse(BaseModel):
     requested_quantity: int
     available_quantity: int
     is_available: bool
+
+
+# Order Schemas
+class OrderCreate(BaseModel):
+    customer_name: str
+    phone: str
+    city: str
+    delivery_address: Optional[str] = None
+    delivery_type: str = 'self_pickup'  # 'self_pickup' or 'delivery'
+    customer_comment: Optional[str] = None
+    event_type: Optional[str] = None
+    guests_count: Optional[int] = None
+
+class OrderResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    order_id: int
+    order_number: str
+    customer_id: int
+    customer_name: str
+    phone: str
+    email: str
+    
+    issue_date: date
+    return_date: date
+    
+    delivery_address: Optional[str]
+    city: str
+    delivery_type: Optional[str]
+    
+    total_price: Decimal
+    deposit_amount: Decimal
+    discount_amount: Decimal
+    
+    status: str
+    source: str
+    
+    customer_comment: Optional[str]
+    manager_comment: Optional[str]
+    
+    event_board_id: Optional[str]
+    event_type: Optional[str]
+    guests_count: Optional[int]
+    
+    created_at: datetime
+    updated_at: datetime
+
     message: Optional[str]
