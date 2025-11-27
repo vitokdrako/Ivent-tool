@@ -67,17 +67,27 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
             position: 'absolute',
             top: '8px',
             right: '8px',
-            padding: '4px 10px',
-            borderRadius: '12px',
-            background: 'rgba(255, 255, 255, 0.95)',
+            padding: '5px 10px',
+            borderRadius: '14px',
+            background: 'rgba(255, 255, 255, 0.97)',
             backdropFilter: 'blur(4px)',
-            fontSize: '11px',
+            fontSize: '12px',
             fontWeight: '600',
             color: product.available > 0 ? '#2e7d32' : '#d32f2f',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: `1px solid ${product.available > 0 ? '#a5d6a7' : '#ffcdd2'}`
+            boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
+            border: `1.5px solid ${product.available > 0 ? '#81c784' : '#ef5350'}`,
+            letterSpacing: '0.3px',
+            lineHeight: '1'
           }}>
-            {product.available}/{product.quantity}
+            <span style={{color: product.available > 0 ? '#2e7d32' : '#d32f2f', fontWeight: '700'}}>
+              {product.available}
+            </span>
+            <span style={{color: '#999', fontWeight: '500', margin: '0 2px'}}>
+              /
+            </span>
+            <span style={{color: '#666', fontWeight: '500'}}>
+              {product.quantity}
+            </span>
           </div>
         )}
       </div>
