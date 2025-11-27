@@ -66,12 +66,20 @@ const ProductFilters = ({
       </div>
 
       <div className="filter-group">
-        <label className="filter-label">Колір</label>
+        <label className="filter-label">
+          Колір
+          {colors.length > 0 && (
+            <span style={{marginLeft: '6px', color: '#999', fontWeight: 'normal'}}>
+              ({colors.length})
+            </span>
+          )}
+        </label>
         <select
           value={selectedColor || ''}
           onChange={(e) => onColorChange(e.target.value || null)}
           className="filter-select filter-select-scrollable"
           size="1"
+          title={`${colors.length} кольорів доступно`}
         >
           <option value="">🎨 Всі кольори</option>
           {colors.map((color, index) => (
