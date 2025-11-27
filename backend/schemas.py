@@ -91,15 +91,15 @@ class EventBoardCreate(BaseModel):
     budget: Optional[Decimal] = None
 
 class EventBoardUpdate(BaseModel):
-    board_name: Optional[str]
-    event_date: Optional[date]
-    event_type: Optional[str]
-    rental_start_date: Optional[date]
-    rental_end_date: Optional[date]
-    notes: Optional[str]
-    budget: Optional[Decimal]
-    status: Optional[str]
-    canvas_layout: Optional[dict]
+    board_name: Optional[str] = None
+    event_date: Optional[date] = None
+    event_type: Optional[str] = None
+    rental_start_date: Optional[date] = None
+    rental_end_date: Optional[date] = None
+    notes: Optional[str] = None
+    budget: Optional[Decimal] = None
+    status: Optional[str] = None
+    canvas_layout: Optional[dict] = None
 
 class EventBoardItemCreate(BaseModel):
     product_id: int
