@@ -31,6 +31,9 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
       boardData.cover_image = imagePreview;
     }
     
+    console.log('📤 Sending board data:', boardData);
+    console.log('🖼️ Image preview:', imagePreview);
+    
     onCreateBoard(boardData);
   };
 
