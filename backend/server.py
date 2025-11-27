@@ -1,5 +1,6 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, and_, or_
 from typing import List, Optional
@@ -28,6 +29,19 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(title="FarforDecor Event Planning API")
+
+# Mount static files from warehouse backend
+# Single source of truth for all product images
+WAREHOUSE_UPLOADS_PATH = "/home/farforre/farforrent.com.ua/rentalhub/backend/uploads"
+if os.path.exists(WAREHOUSE_UPLOADS_PATH):
+    app.mount(
+        "/uploads",
+        StaticFiles(directory=WAREHOUSE_UPLOADS_PATH),
+        name="uploads"
+    )
+    logger.info(f"✅ Mounted warehouse uploads directory: {WAREHOUSE_UPLOADS_PATH}")
+else:
+    logger.warning(f"⚠️ Warehouse uploads directory not found: {WAREHOUSE_UPLOADS_PATH}")
 
 # Create API router with /api prefix
 api_router = APIRouter(prefix="/api")
