@@ -647,7 +647,7 @@ const EventPlannerPage = () => {
                     className="w-full fd-btn fd-btn-primary mb-3"
                     disabled={!activeBoard.items || activeBoard.items.length === 0}
                   >
-                    🎨 Візуальний мудборд
+                    Візуальний мудборд
                   </button>
                   <button className="w-full fd-btn fd-btn-black" style={{padding: '12px'}}>
                     Оформити замовлення
