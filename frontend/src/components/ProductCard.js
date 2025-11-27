@@ -96,6 +96,33 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
         </h3>
         <p className="product-card-sku">{product.sku}</p>
         
+        {/* Availability info */}
+        {product.available !== undefined && (
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'center',
+            marginTop: '6px',
+            fontSize: '11px',
+            color: '#666'
+          }}>
+            <span style={{
+              padding: '2px 8px',
+              borderRadius: '12px',
+              background: product.available > 0 ? '#e8f5e9' : '#ffebee',
+              color: product.available > 0 ? '#2e7d32' : '#c62828',
+              fontWeight: '500'
+            }}>
+              {product.available > 0 ? `✓ Доступно: ${product.available}` : '✗ Недоступно'}
+            </span>
+            {product.reserved > 0 && (
+              <span style={{color: '#999', fontSize: '10px'}}>
+                ({product.reserved} в резерві)
+              </span>
+            )}
+          </div>
+        )}
+        
         <div className="product-card-info">
           <span className="product-card-price">
             ₴{product.rental_price}
