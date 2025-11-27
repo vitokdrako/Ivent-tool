@@ -169,6 +169,7 @@ const EventPlannerPage = () => {
   
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [allSubcategories, setAllSubcategories] = useState([]);
   const [boards, setBoards] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -185,14 +186,16 @@ const EventPlannerPage = () => {
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      const [productsData, categoriesData, boardsData] = await Promise.all([
+      const [productsData, categoriesData, subcategoriesData, boardsData] = await Promise.all([
         api.get('/products?limit=200').then(r => r.data),
         api.get('/categories').then(r => r.data),
+        api.get('/subcategories').then(r => r.data),
         api.get('/boards').then(r => r.data),
       ]);
       
       setProducts(productsData);
       setCategories(categoriesData);
+      setAllSubcategories(subcategoriesData);
       setBoards(boardsData);
       
       if (boardsData.length > 0) {
