@@ -356,24 +356,21 @@ const EventPlannerPage = () => {
   }, [categories, products]);
 
   // Get available subcategories based on selected category
+  // IMPORTANT: Use only subcategories from currently loaded products
   const availableSubcategories = React.useMemo(() => {
     if (!selectedCategory) return [];
     
-    // Find subcategories from API data
-    const categoryData = allSubcategories.find(item => item.category === selectedCategory);
-    if (categoryData && categoryData.subcategories) {
-      return categoryData.subcategories;
-    }
-    
-    // Fallback to products if not found in API
+    // Get subcategories from loaded products only (not from API)
+    // This ensures we only show subcategories that have products in current view
     const subcats = new Set();
     products.forEach(p => {
       if (p.category_name === selectedCategory && p.subcategory_name) {
         subcats.add(p.subcategory_name);
       }
     });
+    
     return Array.from(subcats).sort((a, b) => a.localeCompare(b, 'uk'));
-  }, [allSubcategories, products, selectedCategory]);
+  }, [products, selectedCategory]);
 
   // Get all available colors
   const availableColors = React.useMemo(() => {
