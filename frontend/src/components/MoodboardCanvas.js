@@ -167,6 +167,37 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
     );
   };
 
+  const handleApplyTemplate = (template) => {
+    const canvasWidth = 1200;
+    const canvasHeight = 800;
+    
+    // Get products from board items
+    const products = board.items || [];
+    
+    // Create elements from template cells
+    const newElements = template.cells.map((cell, index) => {
+      const product = products[index];
+      if (!product) return null;
+      
+      return {
+        id: `item-${Date.now()}-${index}`,
+        type: 'product',
+        productId: product.product_id,
+        productName: product.product?.name,
+        imageUrl: product.product?.image_url,
+        x: (cell.x / 100) * canvasWidth,
+        y: (cell.y / 100) * canvasHeight,
+        width: (cell.width / 100) * canvasWidth,
+        height: (cell.height / 100) * canvasHeight,
+        rotation: 0,
+      };
+    }).filter(Boolean);
+    
+    setElements(newElements);
+    setShowTemplates(false);
+    setSelectedId(null);
+  };
+
   const handleSaveCanvas = async () => {
     const canvasLayout = {
       elements,
