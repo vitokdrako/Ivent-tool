@@ -617,7 +617,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
                         paddingBottom: '100%',
                         position: 'relative',
                         background: item.product?.image_url
-                          ? `url(${process.env.REACT_APP_BACKEND_URL}/uploads/${item.product.image_url.replace(/^static\//, '')})`
+                          ? `url(${process.env.REACT_APP_BACKEND_URL}/${item.product.image_url})`
                           : 'linear-gradient(135deg, #f0f0f0, #e4e4e4)',
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
