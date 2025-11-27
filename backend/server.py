@@ -244,6 +244,12 @@ async def get_products(
     if category_id:
         query = query.where(Product.category_id == category_id)
     
+    if category_name:
+        query = query.where(Product.category_name == category_name)
+    
+    if subcategory_name:
+        query = query.where(Product.subcategory_name == subcategory_name)
+    
     if color:
         query = query.where(Product.color.like(f"%{color}%"))
     
