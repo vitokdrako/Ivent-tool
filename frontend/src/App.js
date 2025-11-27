@@ -810,6 +810,16 @@ const EventPlannerPage = () => {
           onSave={handleSaveCanvas}
         />
       )}
+
+      {/* Order Modal */}
+      {showOrderModal && activeBoard && (
+        <OrderModal
+          isOpen={showOrderModal}
+          onClose={() => setShowOrderModal(false)}
+          board={activeBoard}
+          onSubmit={handleSubmitOrder}
+        />
+      )}
     </div>
   );
 };
