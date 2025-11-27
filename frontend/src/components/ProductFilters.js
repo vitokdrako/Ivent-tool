@@ -32,13 +32,21 @@ const ProductFilters = ({
       </div>
 
       <div className="filter-group">
-        <label className="filter-label">Підкатегорія</label>
+        <label className="filter-label">
+          Підкатегорія
+          {subcategories.length > 0 && (
+            <span style={{marginLeft: '6px', color: '#999', fontWeight: 'normal'}}>
+              ({subcategories.length})
+            </span>
+          )}
+        </label>
         <select
           value={selectedSubcategory || ''}
           onChange={(e) => onSubcategoryChange(e.target.value || null)}
           className="filter-select filter-select-scrollable"
           disabled={!subcategories.length}
           size="1"
+          title={!subcategories.length ? 'Спочатку виберіть категорію' : `${subcategories.length} підкатегорій доступно`}
         >
           <option value="">📋 Всі підкатегорії</option>
           {subcategories.map((subcat, index) => (
