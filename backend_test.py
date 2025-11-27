@@ -182,8 +182,8 @@ class FarforDecorAPITester:
             return False
         
         item_data = {
-            "product_id": 1,  # Assuming product ID 1 exists
-            "quantity": 2,
+            "product_id": 59,  # Using actual product ID from API
+            "quantity": 1,  # Using quantity that exists
             "notes": "Test item"
         }
         
