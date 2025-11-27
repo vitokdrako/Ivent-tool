@@ -587,7 +587,7 @@ const EventPlannerPage = () => {
                   
                   <h3 className="font-bold mb-2" style={{fontSize: '14px', color: '#333'}}>{activeBoard.board_name}</h3>
                   <p className="fd-label mb-3">
-                    📅 Івент: {activeBoard.event_date || 'Дата не вказана'}
+                    Івент: {activeBoard.event_date || 'Дата не вказана'}
                   </p>
                   
                   <DateRangePicker
