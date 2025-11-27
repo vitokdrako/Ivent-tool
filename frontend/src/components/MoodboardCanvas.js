@@ -1,6 +1,83 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Moveable from 'react-moveable';
 
+// Layout templates based on the provided image
+const LAYOUT_TEMPLATES = [
+  {
+    id: 1,
+    name: 'Асиметричний',
+    cells: [
+      { x: 0, y: 0, width: 50, height: 100 },
+      { x: 50, y: 0, width: 25, height: 20 },
+      { x: 75, y: 0, width: 25, height: 30 },
+      { x: 50, y: 20, width: 50, height: 25 },
+      { x: 50, y: 45, width: 25, height: 30 },
+      { x: 75, y: 45, width: 25, height: 25 }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Сітка 2×2',
+    cells: [
+      { x: 0, y: 0, width: 50, height: 50 },
+      { x: 50, y: 0, width: 50, height: 50 },
+      { x: 0, y: 50, width: 50, height: 50 },
+      { x: 50, y: 50, width: 50, height: 50 }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Сітка 3×2',
+    cells: [
+      { x: 0, y: 0, width: 33.33, height: 50 },
+      { x: 33.33, y: 0, width: 33.33, height: 50 },
+      { x: 66.66, y: 0, width: 33.34, height: 50 },
+      { x: 0, y: 50, width: 33.33, height: 50 },
+      { x: 33.33, y: 50, width: 33.33, height: 50 },
+      { x: 66.66, y: 50, width: 33.34, height: 50 }
+    ]
+  },
+  {
+    id: 4,
+    name: 'Центральний фокус',
+    cells: [
+      { x: 0, y: 0, width: 25, height: 33 },
+      { x: 25, y: 0, width: 50, height: 33 },
+      { x: 75, y: 0, width: 25, height: 33 },
+      { x: 0, y: 33, width: 25, height: 34 },
+      { x: 25, y: 33, width: 50, height: 34 },
+      { x: 75, y: 33, width: 25, height: 34 },
+      { x: 0, y: 67, width: 50, height: 33 },
+      { x: 50, y: 67, width: 50, height: 33 }
+    ]
+  },
+  {
+    id: 5,
+    name: 'Горизонтальний',
+    cells: [
+      { x: 0, y: 0, width: 100, height: 33 },
+      { x: 0, y: 33, width: 50, height: 34 },
+      { x: 50, y: 33, width: 50, height: 34 },
+      { x: 0, y: 67, width: 100, height: 33 }
+    ]
+  },
+  {
+    id: 6,
+    name: 'Великий центр',
+    cells: [
+      { x: 0, y: 0, width: 33.33, height: 25 },
+      { x: 33.33, y: 0, width: 33.34, height: 25 },
+      { x: 66.67, y: 0, width: 33.33, height: 25 },
+      { x: 0, y: 25, width: 25, height: 50 },
+      { x: 25, y: 25, width: 50, height: 50 },
+      { x: 75, y: 25, width: 25, height: 50 },
+      { x: 0, y: 75, width: 33.33, height: 25 },
+      { x: 33.33, y: 75, width: 33.34, height: 25 },
+      { x: 66.67, y: 75, width: 33.33, height: 25 }
+    ]
+  }
+];
+
 const MoodboardCanvas = ({ board, onClose, onSave }) => {
   const [elements, setElements] = useState(board.canvasLayout?.elements || []);
   const [selectedId, setSelectedId] = useState(null);
@@ -8,6 +85,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
   const [textMode, setTextMode] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   const canvasRef = useRef(null);
 
   // Initialize elements from board items if not loaded
