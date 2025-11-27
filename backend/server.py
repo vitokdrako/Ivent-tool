@@ -282,7 +282,6 @@ async def get_products(
                 "subcategory_id": product.subcategory_id,
                 "subcategory_name": product.subcategory_name,
                 "rental_price": float(product.rental_price) if product.rental_price else 0.0,
-                "damage_cost": float(product.damage_cost) if product.damage_cost else 0.0,
                 "image_url": product.image_url,
                 "color": product.color,
                 "material": product.material,
