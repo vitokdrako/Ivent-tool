@@ -1061,6 +1061,8 @@ async def convert_board_to_order(
     - Конвертує soft reservations → hard reservations
     - Створює замовлення в системі
     """
+    customer_id = current_user.customer_id
+    
     # 1. Отримати Event Board з items
     board_result = await db.execute(
         select(EventBoard).where(
