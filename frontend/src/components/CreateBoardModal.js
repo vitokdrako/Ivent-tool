@@ -235,13 +235,17 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
                   <div className="upload-option">
                     <input
                       type="url"
-                      name="cover_image"
-                      value={formData.cover_image}
-                      onChange={handleImageUrlChange}
                       placeholder="https://example.com/image.jpg"
                       className="form-input"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleImageUrlChange({ target: { value: e.target.value } });
+                        }
+                      }}
+                      onBlur={(e) => handleImageUrlChange(e)}
                     />
-                    <span className="upload-hint">🔗 Вставте URL зображення</span>
+                    <span className="upload-hint">🔗 Вставте URL зображення (натисніть Enter)</span>
                   </div>
                 </div>
               </div>
