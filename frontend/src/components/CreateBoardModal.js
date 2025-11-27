@@ -1,0 +1,151 @@
+import React, { useState } from 'react';
+import './CreateBoardModal.css';
+
+const CreateBoardModal = ({ onClose, onCreateBoard }) => {
+  const [formData, setFormData] = useState({
+    board_name: '',
+    event_date: '',
+    event_type: '',
+    rental_start_date: '',
+    rental_end_date: '',
+    notes: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Create board data object, excluding empty values
+    const boardData = {};
+    Object.keys(formData).forEach(key => {
+      if (formData[key]) {
+        boardData[key] = formData[key];
+      }
+    });
+    
+    onCreateBoard(boardData);
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <button 
+          type="button"
+          onClick={onClose}
+          className="modal-close-btn"
+        >
+          ✕
+        </button>
+        
+        <h2 className="modal-title">Створити новий івент</h2>
+        
+        <form onSubmit={handleSubmit} className="board-form">
+          <div className="form-group">
+            <label className="form-label">
+              Назва івенту <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              name="board_name"
+              value={formData.board_name}
+              onChange={handleChange}
+              placeholder="напр. Весілля Марії"
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Дата івенту</label>
+            <input
+              type="date"
+              name="event_date"
+              value={formData.event_date}
+              onChange={handleChange}
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Тип івенту</label>
+            <select
+              name="event_type"
+              value={formData.event_type}
+              onChange={handleChange}
+              className="form-select"
+            >
+              <option value="">Оберіть тип</option>
+              <option value="wedding">💍 Весілля</option>
+              <option value="birthday">🎂 День народження</option>
+              <option value="photoshoot">📸 Фотосесія</option>
+              <option value="corporate">🏢 Корпоратив</option>
+              <option value="anniversary">💐 Ювілей</option>
+              <option value="party">🎉 Вечірка</option>
+              <option value="other">✨ Інше</option>
+            </select>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Початок оренди</label>
+              <input
+                type="date"
+                name="rental_start_date"
+                value={formData.rental_start_date}
+                onChange={handleChange}
+                className="form-input"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Кінець оренди</label>
+              <input
+                type="date"
+                name="rental_end_date"
+                value={formData.rental_end_date}
+                onChange={handleChange}
+                className="form-input"
+                min={formData.rental_start_date}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Нотатки</label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              rows="3"
+              className="form-textarea"
+              placeholder="Додаткова інформація про івент..."
+            />
+          </div>
+
+          <div className="form-actions">
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn-secondary"
+            >
+              Скасувати
+            </button>
+            <button
+              type="submit"
+              className="btn-primary"
+            >
+              Створити івент
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CreateBoardModal;

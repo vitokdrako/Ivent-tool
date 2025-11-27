@@ -1,53 +1,676 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { BoardProvider, useBoard } from './context/BoardContext';
+import DateRangePicker from './components/DateRangePicker';
+import ProductCard from './components/ProductCard';
+import BoardItemCard from './components/BoardItemCard';
+import MoodboardCanvas from './components/MoodboardCanvas';
+import ProductFilters from './components/ProductFilters';
+import CreateBoardModal from './components/CreateBoardModal';
+import './App.css';
+import api from './api/axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+// Create a client
+const queryClient = new QueryClient();
 
-const Home = () => {
-  const helloWorldApi = async () => {
+// Auth Components
+const LoginPage = () => {
+  const { login, register } = useAuth();
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    firstname: '',
+    lastname: '',
+    telephone: '',
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      if (isLogin) {
+        await login(formData.email, formData.password);
+        window.location.href = '/';
+      } else {
+        await register(formData);
+        alert('Реєстрація успішна! Тепер увійдіть.');
+        setIsLogin(true);
+      }
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Помилка входу/реєстрації');
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{background: '#f3f3f3'}}>
+      <div className="bg-white shadow-sm p-10 w-full max-w-md" style={{borderRadius: '4px', boxShadow: '0 2px 6px rgba(0,0,0,0.03)'}}>
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold mb-1 fd-uppercase-wide" style={{color: '#333'}}>
+            FARFORDECOR
+          </h1>
+          <p className="text-xs fd-uppercase" style={{color: '#999', marginTop: '8px'}}>Event Planning Platform</p>
+        </div>
+
+        <div className="flex gap-2 mb-8">
+          <button
+            onClick={() => setIsLogin(true)}
+            className={`flex-1 fd-btn transition-all ${
+              isLogin
+                ? 'fd-btn-black'
+                : 'fd-btn-secondary'
+            }`}
+            style={{padding: '9px 12px'}}
+          >
+            Вхід
+          </button>
+          <button
+            onClick={() => setIsLogin(false)}
+            className={`flex-1 fd-btn transition-all ${
+              !isLogin
+                ? 'fd-btn-black'
+                : 'fd-btn-secondary'
+            }`}
+            style={{padding: '9px 12px'}}
+          >
+            Реєстрація
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <>
+              <input
+                type="text"
+                placeholder="Ім'я"
+                value={formData.firstname}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstname: e.target.value })
+                }
+                className="w-full fd-input"
+                required={!isLogin}
+              />
+              <input
+                type="text"
+                placeholder="Прізвище"
+                value={formData.lastname}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastname: e.target.value })
+                }
+                className="w-full fd-input"
+                required={!isLogin}
+              />
+              <input
+                type="tel"
+                placeholder="Телефон"
+                value={formData.telephone}
+                onChange={(e) =>
+                  setFormData({ ...formData, telephone: e.target.value })
+                }
+                className="w-full fd-input"
+              />
+            </>
+          )}
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Пароль"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+            required
+            minLength={6}
+          />
+
+          {error && (
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full fd-btn fd-btn-black disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{padding: '12px'}}
+          >
+            {loading ? 'Завантаження...' : isLogin ? 'Увійти' : 'Зареєструватися'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
 
+// Main Event Planner Page
+const EventPlannerPage = () => {
+  const { user, logout } = useAuth();
+  const { activeBoard, setActiveBoard, isSidePanelOpen, toggleSidePanel } = useBoard();
+  
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [boards, setBoards] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showNewBoardModal, setShowNewBoardModal] = useState(false);
+  const [showCanvas, setShowCanvas] = useState(false);
+
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  const loadInitialData = async () => {
+    try {
+      setLoading(true);
+      const [productsData, categoriesData, boardsData] = await Promise.all([
+        api.get('/products?limit=200').then(r => r.data),
+        api.get('/categories').then(r => r.data),
+        api.get('/boards').then(r => r.data),
+      ]);
+      
+      setProducts(productsData);
+      setCategories(categoriesData);
+      setBoards(boardsData);
+      
+      if (boardsData.length > 0) {
+        setActiveBoard(boardsData[0]);
+      }
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateBoard = async (boardData) => {
+    try {
+      const newBoard = await api.post('/boards', boardData).then(r => r.data);
+      setBoards([newBoard, ...boards]);
+      setActiveBoard(newBoard);
+      setShowNewBoardModal(false);
+    } catch (error) {
+      console.error('Failed to create board:', error);
+      alert('Помилка створення мудборду');
+    }
+  };
+
+  const handleUpdateBoardDates = async (boardId, startDate, endDate) => {
+    if (!startDate || !endDate) return;
+
+    try {
+      const updatedBoard = await api.patch(`/boards/${boardId}`, {
+        rental_start_date: startDate,
+        rental_end_date: endDate,
+      }).then(r => r.data);
+      
+      setActiveBoard(updatedBoard);
+      setBoards(boards.map(b => b.id === boardId ? updatedBoard : b));
+    } catch (error) {
+      console.error('Failed to update dates:', error);
+      alert('Помилка оновлення дат');
+    }
+  };
+
+  const handleSaveCanvas = async (canvasLayout) => {
+    if (!activeBoard) return;
+
+    try {
+      const updatedBoard = await api.patch(`/boards/${activeBoard.id}`, {
+        canvas_layout: canvasLayout,
+      }).then(r => r.data);
+      
+      setActiveBoard(updatedBoard);
+      setBoards(boards.map(b => b.id === updatedBoard.id ? updatedBoard : b));
+      setShowCanvas(false);
+      alert('✅ Візуальний мудборд збережено!');
+    } catch (error) {
+      console.error('Failed to save canvas:', error);
+      alert('Помилка збереження мудборду');
+    }
+  };
+
+  const handleAddToBoard = async (product) => {
+    if (!activeBoard) {
+      alert('Спочатку створіть мудборд!');
+      return;
+    }
+
+    try {
+      await api.post(`/boards/${activeBoard.id}/items`, {
+        product_id: product.product_id,
+        quantity: 1,
+      });
+      
+      // Reload active board
+      const updatedBoard = await api.get(`/boards/${activeBoard.id}`).then(r => r.data);
+      setActiveBoard(updatedBoard);
+      
+      // Update boards list
+      setBoards(boards.map(b => b.id === updatedBoard.id ? updatedBoard : b));
+    } catch (error) {
+      console.error('Failed to add item:', error);
+      alert('Помилка додавання товару');
+    }
+  };
+
+  const handleUpdateItem = async (itemId, updateData) => {
+    if (!activeBoard) return;
+
+    try {
+      await api.patch(`/boards/${activeBoard.id}/items/${itemId}`, updateData);
+      
+      // Reload active board
+      const updatedBoard = await api.get(`/boards/${activeBoard.id}`).then(r => r.data);
+      setActiveBoard(updatedBoard);
+      setBoards(boards.map(b => b.id === updatedBoard.id ? updatedBoard : b));
+    } catch (error) {
+      console.error('Failed to update item:', error);
+      throw error;
+    }
+  };
+
+  const handleRemoveFromBoard = async (itemId) => {
+    if (!activeBoard) return;
+
+    try {
+      await api.delete(`/boards/${activeBoard.id}/items/${itemId}`);
+      
+      // Reload active board
+      const updatedBoard = await api.get(`/boards/${activeBoard.id}`).then(r => r.data);
+      setActiveBoard(updatedBoard);
+      setBoards(boards.map(b => b.id === updatedBoard.id ? updatedBoard : b));
+    } catch (error) {
+      console.error('Failed to remove item:', error);
+    }
+  };
+
+  // Get unique categories from products (since category_id is null, use category_name)
+  const uniqueCategories = React.useMemo(() => {
+    const cats = new Map();
+    products.forEach(p => {
+      if (p.category_name && !cats.has(p.category_name)) {
+        cats.set(p.category_name, { name: p.category_name });
+      }
+    });
+    return Array.from(cats.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [products]);
+
+  // Get available subcategories based on selected category
+  const availableSubcategories = React.useMemo(() => {
+    if (!selectedCategory) return [];
+    
+    const subcats = new Set();
+    products.forEach(p => {
+      if (p.category_name === selectedCategory && p.subcategory_name) {
+        subcats.add(p.subcategory_name);
+      }
+    });
+    return Array.from(subcats).sort();
+  }, [products, selectedCategory]);
+
+  // Get all available colors
+  const availableColors = React.useMemo(() => {
+    const colors = new Set();
+    products.forEach(p => {
+      if (p.color) {
+        p.color.split(',').forEach(c => {
+          const trimmed = c.trim();
+          if (trimmed) colors.add(trimmed);
+        });
+      }
+    });
+    return Array.from(colors).sort();
+  }, [products]);
+
+  // Reset subcategory when category changes
+  useEffect(() => {
+    setSelectedSubcategory(null);
+  }, [selectedCategory]);
+
+  const filteredProducts = products.filter(p => {
+    // Smart search - checks name, SKU, category, subcategory, color, material
+    const matchesSearch = !searchTerm || 
+      p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.category_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.subcategory_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.color?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.material?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = !selectedCategory || p.category_name === selectedCategory;
+    
+    const matchesSubcategory = !selectedSubcategory || p.subcategory_name === selectedSubcategory;
+    
+    const matchesColor = !selectedColor || 
+      (p.color && p.color.split(',').some(c => c.trim() === selectedColor));
+    
+    return matchesSearch && matchesCategory && matchesSubcategory && matchesColor;
+  });
+
+  const calculateBoardTotal = () => {
+    if (!activeBoard || !activeBoard.items) return 0;
+    
+    return activeBoard.items.reduce((total, item) => {
+      const price = item.product?.rental_price || 0;
+      const days = activeBoard.rental_days || 1;
+      return total + (price * item.quantity * days);
+    }, 0);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl text-gray-600">Завантаження...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="fd-header sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <h1 className="text-xl font-bold fd-uppercase-wide" style={{color: '#333'}}>FARFORDECOR</h1>
+            <div className="w-px h-5" style={{background: '#e6e6e6'}}></div>
+            <span className="text-xs fd-uppercase" style={{color: '#999'}}>Event Planning Platform</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="text-sm" style={{color: '#555'}}>
+              {user?.firstname} {user?.lastname}
+            </span>
+            <button
+              onClick={logout}
+              className="fd-btn fd-btn-secondary"
+            >
+              Вийти
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex h-[calc(100vh-73px)]" style={{background: '#f3f3f3'}}>
+        {/* Catalog Section */}
+        <div className={`flex-1 overflow-auto transition-all duration-300 ${isSidePanelOpen ? 'mr-96' : ''}`}>
+          <div className="p-8">
+            {/* Search and Filters */}
+            <div className="mb-6 space-y-4">
+              <div style={{maxWidth: '600px'}}>
+                <input
+                  type="text"
+                  placeholder="Розумний пошук: назва, артикул, категорія, колір, матеріал..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 15px',
+                    border: '1px solid #e5ecf3',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    fontFamily: 'Montserrat, Arial, sans-serif',
+                    color: '#838182',
+                    transition: 'all 0.3s ease'
+                  }}
+                />
+              </div>
+              
+              <ProductFilters
+                categories={uniqueCategories}
+                subcategories={availableSubcategories}
+                colors={availableColors}
+                selectedCategory={selectedCategory}
+                selectedSubcategory={selectedSubcategory}
+                selectedColor={selectedColor}
+                onCategoryChange={setSelectedCategory}
+                onSubcategoryChange={setSelectedSubcategory}
+                onColorChange={setSelectedColor}
+              />
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.product_id}
+                  product={product}
+                  onAddToBoard={handleAddToBoard}
+                  boardDates={{
+                    startDate: activeBoard?.rental_start_date,
+                    endDate: activeBoard?.rental_end_date,
+                  }}
+                />
+              ))}
+            </div>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-12 text-gray-500">
+                Товари не знайдено
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Side Panel - Event Board */}
+        {isSidePanelOpen && (
+          <div className="w-96 fd-side-panel flex flex-col fixed right-0 h-[calc(100vh-73px)]">
+            {/* Panel Header */}
+            <div className="fd-side-header flex items-center justify-between" style={{paddingBottom: '10px', marginBottom: '14px'}}>
+              <h2 className="fd-side-title">МІЙ ІВЕНТ</h2>
+              <button
+                onClick={toggleSidePanel}
+                className="fd-btn"
+                style={{fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#999', background: 'none', border: 'none', padding: 0}}
+              >
+                згорнути
+              </button>
+            </div>
+
+            {/* Board Selector */}
+            <div style={{padding: '0 22px 18px'}}>
+              <label className="fd-label">Мудборд</label>
+              <select
+                value={activeBoard?.id || ''}
+                onChange={(e) => {
+                  const board = boards.find(b => b.id === e.target.value);
+                  setActiveBoard(board);
+                }}
+                className="w-full fd-select mb-3"
+              >
+                <option value="">Виберіть мудборд</option>
+                {boards.map((board) => (
+                  <option key={board.id} value={board.id}>
+                    {board.board_name}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => setShowNewBoardModal(true)}
+                className="w-full fd-btn fd-btn-primary"
+              >
+                + створити новий івент
+              </button>
+            </div>
+
+            {/* Board Content */}
+            {activeBoard ? (
+              <>
+                <div style={{padding: '0 22px 18px', borderBottom: '1px solid #f0f0f0'}}>
+                  <h3 className="font-bold mb-2" style={{fontSize: '14px', color: '#333'}}>{activeBoard.board_name}</h3>
+                  <p className="fd-label mb-3">
+                    📅 Івент: {activeBoard.event_date || 'Дата не вказана'}
+                  </p>
+                  
+                  <DateRangePicker
+                    startDate={activeBoard.rental_start_date}
+                    endDate={activeBoard.rental_end_date}
+                    onStartDateChange={(date) => handleUpdateBoardDates(activeBoard.id, date, activeBoard.rental_end_date)}
+                    onEndDateChange={(date) => handleUpdateBoardDates(activeBoard.id, activeBoard.rental_start_date, date)}
+                  />
+                  
+                  {activeBoard.rental_days && (
+                    <p className="text-center mt-2" style={{fontSize: '11px', color: '#999'}}>
+                      🕐 {activeBoard.rental_days} днів оренди
+                    </p>
+                  )}
+                </div>
+
+                {/* Items List */}
+                <div className="flex-1 overflow-auto p-4">
+                  {activeBoard.items && activeBoard.items.length > 0 ? (
+                    <div className="space-y-3">
+                      {activeBoard.items.map((item) => (
+                        <BoardItemCard
+                          key={item.id}
+                          item={item}
+                          boardDates={{
+                            startDate: activeBoard.rental_start_date,
+                            endDate: activeBoard.rental_end_date,
+                          }}
+                          rentalDays={activeBoard.rental_days}
+                          onUpdate={handleUpdateItem}
+                          onRemove={handleRemoveFromBoard}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <p className="text-4xl mb-2">📦</p>
+                      <p>Мудборд порожній</p>
+                      <p className="text-sm">Додайте товари з каталогу</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Summary */}
+                <div style={{padding: '22px', borderTop: '1px solid #f0f0f0', background: '#fafafa'}}>
+                  <div className="flex justify-between items-center mb-3 pb-3" style={{borderBottom: '1px solid #e6e6e6'}}>
+                    <span className="fd-label">Всього позицій:</span>
+                    <span className="font-bold" style={{color: '#333'}}>{activeBoard.items?.length || 0}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="font-bold fd-uppercase" style={{fontSize: '12px', color: '#555'}}>Загальна вартість:</span>
+                    <span className="fd-price-large" style={{color: '#333'}}>
+                      ₴{calculateBoardTotal().toFixed(2)}
+                    </span>
+                  </div>
+                  <button 
+                    onClick={() => setShowCanvas(true)}
+                    className="w-full fd-btn fd-btn-primary mb-3"
+                    disabled={!activeBoard.items || activeBoard.items.length === 0}
+                  >
+                    🎨 Візуальний мудборд
+                  </button>
+                  <button className="w-full fd-btn fd-btn-black" style={{padding: '12px'}}>
+                    Оформити замовлення
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="fd-empty">
+                  <div className="fd-empty-icon">🎨</div>
+                  <div className="fd-empty-title">Створіть перший мудборд</div>
+                  <div className="fd-empty-text">
+                    Додавайте позиції з каталогу ліворуч,<br/>щоб зібрати підбірку для клієнта.
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Toggle button when panel is closed */}
+        {!isSidePanelOpen && (
+          <button
+            onClick={toggleSidePanel}
+            className="fixed right-0 top-1/2 transform -translate-y-1/2 fd-btn-black px-3 py-10 z-20"
+            style={{boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderRadius: '4px 0 0 4px'}}
+          >
+            <span className="transform rotate-90 inline-block fd-uppercase">Мудборд</span>
+          </button>
+        )}
+      </div>
+
+      {/* New Board Modal */}
+      {showNewBoardModal && (
+        <CreateBoardModal
+          onClose={() => setShowNewBoardModal(false)}
+          onCreateBoard={handleCreateBoard}
+        />
+      )}
+
+      {/* Moodboard Canvas */}
+      {showCanvas && activeBoard && (
+        <MoodboardCanvas
+          board={activeBoard}
+          onClose={() => setShowCanvas(false)}
+          onSave={handleSaveCanvas}
+        />
+      )}
+    </div>
+  );
+};
+
+// Protected Route
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl text-gray-600">Завантаження...</div>
+      </div>
+    );
+  }
+
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+// Main App
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BoardProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <EventPlannerPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </BoardProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
