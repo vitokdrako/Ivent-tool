@@ -15,12 +15,20 @@ const ProductFilters = ({
   return (
     <div className="product-filters">
       <div className="filter-group">
-        <label className="filter-label">Категорія</label>
+        <label className="filter-label">
+          Категорія
+          {categories.length > 0 && (
+            <span style={{marginLeft: '6px', color: '#999', fontWeight: 'normal'}}>
+              ({categories.length})
+            </span>
+          )}
+        </label>
         <select
           value={selectedCategory || ''}
           onChange={(e) => onCategoryChange(e.target.value || null)}
           className="filter-select filter-select-scrollable"
           size="1"
+          title={`${categories.length} категорій доступно`}
         >
           <option value="">📦 Всі категорії</option>
           {categories.map((cat, index) => (
