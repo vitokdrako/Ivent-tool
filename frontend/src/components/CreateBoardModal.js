@@ -228,7 +228,7 @@ const CreateBoardModal = ({ onClose, onCreateBoard }) => {
                         className="upload-input"
                       />
                       <span className="upload-btn">
-                        📁 Завантажити з комп'ютера
+                        Завантажити з комп'ютера
                       </span>
                     </label>
                   </div>
