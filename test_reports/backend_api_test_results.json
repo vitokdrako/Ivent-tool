@@ -1,0 +1,110 @@
+{
+  "total_tests": 17,
+  "passed_tests": 14,
+  "failed_tests": 3,
+  "success_rate": 82.35294117647058,
+  "test_results": [
+    {
+      "test": "Health Check",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:36.323532"
+    },
+    {
+      "test": "User Login",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:37.256909"
+    },
+    {
+      "test": "Get User Info",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:37.831703"
+    },
+    {
+      "test": "Get Categories",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:38.405909"
+    },
+    {
+      "test": "Get All Subcategories",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:38.986189"
+    },
+    {
+      "test": "Get Subcategories for Category",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:39.564694"
+    },
+    {
+      "test": "Get Products",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:40.274362"
+    },
+    {
+      "test": "Search Products",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:41.032416"
+    },
+    {
+      "test": "Filter by Category",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:41.611456"
+    },
+    {
+      "test": "Filter by Color",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:42.344810"
+    },
+    {
+      "test": "Check Product Availability",
+      "success": false,
+      "details": "Expected 200, got 404 - Product not found",
+      "timestamp": "2025-11-27T13:00:42.960712"
+    },
+    {
+      "test": "Create Event Board",
+      "success": true,
+      "details": "Status: 201",
+      "timestamp": "2025-11-27T13:00:44.209698"
+    },
+    {
+      "test": "Get User Boards",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:45.060680"
+    },
+    {
+      "test": "Get Board Details",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-11-27T13:00:45.911569"
+    },
+    {
+      "test": "Update Board",
+      "success": false,
+      "details": "Expected 200, got 422 - [{'type': 'missing', 'loc': ['body', 'event_date'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'event_type'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'rental_start_date'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'rental_end_date'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'notes'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'status'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}, {'type': 'missing', 'loc': ['body', 'canvas_layout'], 'msg': 'Field required', 'input': {'board_name': 'Updated Test Board', 'budget': 6000.0}, 'url': 'https://errors.pydantic.dev/2.12/v/missing'}]",
+      "timestamp": "2025-11-27T13:00:46.487648"
+    },
+    {
+      "test": "Add Item to Board",
+      "success": false,
+      "details": "Expected 201, got 404 - Product not found",
+      "timestamp": "2025-11-27T13:00:47.329108"
+    },
+    {
+      "test": "Cleanup - Delete Test Board",
+      "success": true,
+      "details": "Status: 204",
+      "timestamp": "2025-11-27T13:00:48.464836"
+    }
+  ]
+}
