@@ -295,7 +295,8 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
             />
           )}
         </div>
-      </div>
+          </div>
+        </div>
 
         {/* Right Sidebar - Products List */}
         <div style={{
