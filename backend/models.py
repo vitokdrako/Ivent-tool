@@ -168,6 +168,40 @@ class ProductReservation(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     released_at = Column(DateTime)
 
+class Order(Base):
+    __tablename__ = 'orders'
+    
+    order_id = Column(Integer, primary_key=True, autoincrement=True)
+    order_number = Column(String(50), unique=True, nullable=False, index=True)
+    customer_id = Column(Integer, ForeignKey('customers.customer_id'), nullable=False, index=True)
+    customer_name = Column(String(255))
+    phone = Column(String(50))
+    email = Column(String(255))
+    
+    issue_date = Column(Date, nullable=False, index=True)
+    return_date = Column(Date, nullable=False, index=True)
+    
+    delivery_address = Column(String(500))
+    city = Column(String(100))
+    delivery_type = Column(String(50))  # 'self_pickup' або 'delivery'
+    
+    total_price = Column(Numeric(10, 2))
+    deposit_amount = Column(Numeric(10, 2))
+    discount_amount = Column(Numeric(10, 2), default=0)
+    
+    status = Column(String(50), default='pending', index=True)
+    source = Column(String(50), default='event_tool', index=True)
+    
+    customer_comment = Column(Text)
+    manager_comment = Column(Text)
+    
+    event_board_id = Column(String(36), ForeignKey('event_boards.id'))
+    event_type = Column(String(100))
+    guests_count = Column(Integer)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 class RefreshToken(Base):
     __tablename__ = 'refresh_tokens'
     
