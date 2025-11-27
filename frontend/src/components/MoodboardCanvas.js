@@ -296,6 +296,102 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
           )}
         </div>
       </div>
+
+        {/* Right Sidebar - Products List */}
+        <div style={{
+          width: '340px',
+          background: '#fff',
+          borderLeft: '1px solid #e3e3e3',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}>
+          {/* Sidebar Header */}
+          <div style={{
+            padding: '20px',
+            borderBottom: '1px solid #f0f0f0',
+            background: '#fafafa'
+          }}>
+            <h3 className="font-bold mb-1" style={{fontSize: '14px', color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em'}}>
+              📦 Товари мудборду
+            </h3>
+            <p className="fd-label">
+              Клацніть на товар щоб додати на canvas
+            </p>
+          </div>
+
+          {/* Products List */}
+          <div style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '16px'
+          }}>
+            {board.items && board.items.length > 0 ? (
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+                {board.items.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => handleAddItem(item)}
+                    className="fd-card cursor-pointer hover:shadow-lg"
+                    style={{
+                      padding: '8px',
+                      background: '#fff',
+                      border: '1px solid #e8e8e8',
+                      borderRadius: '4px',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '100%',
+                        paddingBottom: '100%',
+                        position: 'relative',
+                        background: item.product?.image_url
+                          ? `url(https://www.farforrent.com.ua/${item.product.image_url.replace(/^static\//, '')})`
+                          : 'linear-gradient(135deg, #f0f0f0, #e4e4e4)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        borderRadius: '3px',
+                        marginBottom: '6px',
+                      }}
+                    />
+                    <p style={{
+                      fontSize: '11px',
+                      color: '#666',
+                      lineHeight: '1.3',
+                      height: '30px',
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical'
+                    }}>
+                      {item.product?.name}
+                    </p>
+                    <div style={{
+                      fontSize: '10px',
+                      color: '#999',
+                      marginTop: '4px'
+                    }}>
+                      Кількість: {item.quantity}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="fd-empty" style={{paddingTop: '100px'}}>
+                <div className="fd-empty-icon" style={{fontSize: '48px'}}>📦</div>
+                <div className="fd-empty-title" style={{fontSize: '14px', marginTop: '12px'}}>
+                  Немає товарів
+                </div>
+                <div className="fd-empty-text" style={{fontSize: '12px', color: '#999'}}>
+                  Додайте товари до мудборду<br/>на головній сторінці
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
