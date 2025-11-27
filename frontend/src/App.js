@@ -448,11 +448,11 @@ const EventPlannerPage = () => {
               }}
             />
             {/* Company Name */}
-            <h1 className="text-xl font-bold fd-uppercase-wide" style={{color: '#333', letterSpacing: '0.1em'}}>
+            <h1 className="text-xl font-bold" style={{color: '#333', letterSpacing: '0.03em'}}>
               FarforDecorOrenda
             </h1>
             <div className="w-px h-5" style={{background: '#e6e6e6'}}></div>
-            <span className="text-xs fd-uppercase" style={{color: '#999'}}>Event Planning Platform</span>
+            <span className="text-xs" style={{color: '#999', textTransform: 'uppercase'}}>Event Planning Platform</span>
           </div>
           <div className="flex items-center gap-6">
             <span className="text-sm" style={{color: '#555'}}>
