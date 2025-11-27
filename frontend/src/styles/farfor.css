@@ -38,6 +38,9 @@
   --fd-radius-md: 4px;
   --fd-radius-lg: 20px;
   --fd-radius-xl: 30px;
+  
+  /* Переходи */
+  --fd-transition: all 0.2s ease;
 }
 
 /* Глобальні стилі */
