@@ -758,8 +758,10 @@ const EventPlannerPage = () => {
                     Візуальний мудборд
                   </button>
                   <button 
+                    onClick={() => setShowOrderModal(true)}
                     className="w-full fd-btn fd-btn-black" 
                     style={{padding: '9px 12px', fontSize: '11px'}}
+                    disabled={!activeBoard.items || activeBoard.items.length === 0 || !activeBoard.rental_start_date || !activeBoard.rental_end_date}
                   >
                     Оформити замовлення
                   </button>
