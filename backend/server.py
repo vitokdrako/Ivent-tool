@@ -817,9 +817,26 @@ async def delete_board_item(
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     
+    # Delete associated soft reservation
+    soft_reservation_result = await db.execute(
+        select(SoftReservation).where(
+            and_(
+                SoftReservation.board_id == board_id,
+                SoftReservation.product_id == item.product_id
+            )
+        )
+    )
+    soft_reservation = soft_reservation_result.scalar_one_or_none()
+    
+    if soft_reservation:
+        await db.delete(soft_reservation)
+        logger.info(f"Soft reservation deleted for product {item.product_id} from board {board_id}")
+    
     await db.delete(item)
     board.updated_at = datetime.utcnow()
     await db.commit()
+    
+    logger.info(f"Item {item_id} deleted from board {board_id}")
     
     return
 
