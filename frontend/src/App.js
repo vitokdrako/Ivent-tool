@@ -444,25 +444,8 @@ const EventPlannerPage = () => {
     setSelectedSubcategory(null);
   }, [selectedCategory]);
 
-  const filteredProducts = products.filter(p => {
-    // Smart search - checks name, SKU, category, subcategory, color, material
-    const matchesSearch = !searchTerm || 
-      p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.category_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.subcategory_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.color?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.material?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = !selectedCategory || p.category_name === selectedCategory;
-    
-    const matchesSubcategory = !selectedSubcategory || p.subcategory_name === selectedSubcategory;
-    
-    const matchesColor = !selectedColor || 
-      (p.color && p.color.split(',').some(c => c.trim() === selectedColor));
-    
-    return matchesSearch && matchesCategory && matchesSubcategory && matchesColor;
-  });
+  // Products are already filtered on backend
+  const filteredProducts = products;
 
   const calculateBoardTotal = () => {
     if (!activeBoard || !activeBoard.items) return 0;
