@@ -1051,7 +1051,7 @@ async def _create_or_update_soft_reservation(
 async def convert_board_to_order(
     board_id: str,
     order_data: OrderCreate,
-    customer_id: int = Depends(get_current_user),
+    current_user: Customer = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
