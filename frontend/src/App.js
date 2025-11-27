@@ -587,7 +587,21 @@ const EventPlannerPage = () => {
               ))}
             </div>
 
-            {filteredProducts.length === 0 && (
+            {/* Load More Button */}
+            {hasMore && filteredProducts.length > 0 && (
+              <div className="text-center mt-8 mb-4">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="fd-btn fd-btn-primary"
+                  style={{padding: '12px 32px'}}
+                >
+                  {loadingMore ? 'Завантаження...' : 'Завантажити більше'}
+                </button>
+              </div>
+            )}
+
+            {!loading && filteredProducts.length === 0 && (
               <div className="text-center py-12 text-gray-500">
                 Товари не знайдено
               </div>
