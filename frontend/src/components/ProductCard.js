@@ -93,9 +93,6 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
             ₴{product.rental_price}
             <span className="product-card-price-unit">/день</span>
           </span>
-          <span className="product-card-quantity">
-            Всього: {product.quantity} шт
-          </span>
         </div>
         
         <button
