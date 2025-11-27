@@ -546,10 +546,8 @@ const EventPlannerPage = () => {
             {/* Products Count */}
             <div className="mb-4 flex items-center justify-between">
               <div className="text-sm" style={{color: '#666'}}>
-                Знайдено товарів: <span style={{fontWeight: 'bold', color: '#333'}}>{filteredProducts.length}</span>
-                {(selectedCategory || selectedSubcategory || selectedColor || searchTerm) && (
-                  <span style={{color: '#999'}}> (з {products.length} всього)</span>
-                )}
+                Показано товарів: <span style={{fontWeight: 'bold', color: '#333'}}>{filteredProducts.length}</span>
+                {hasMore && <span style={{color: '#999'}}> (завантажуйте більше для перегляду всіх)</span>}
               </div>
             </div>
 
