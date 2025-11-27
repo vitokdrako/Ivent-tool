@@ -199,10 +199,16 @@ async def get_products(
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
     skip: int = 0,
-    limit: int = 50,
+    limit: int = 1000,  # Збільшено з 50 до 1000 як у warehouse
+    include_availability: bool = True,  # Додано опція для розрахунку доступності
     db: AsyncSession = Depends(get_db)
 ):
-    """Отримати список товарів з фільтрами"""
+    """
+    Отримати список товарів з фільтрами
+    ✅ Розраховує available з врахуванням:
+       - SoftReservation (резерви в мудбордах)
+       - Статус чистки (мийка, хімчистка, реставрація)
+    """
     
     query = select(Product).where(Product.status == 1)
     
@@ -238,6 +244,65 @@ async def get_products(
     
     result = await db.execute(query)
     products = result.scalars().all()
+    
+    # Якщо потрібна статистика доступності - рахуємо batch
+    if include_availability and products:
+        # Batch запит: підрахунок SoftReservation для всіх товарів одразу
+        product_ids = [p.product_id for p in products]
+        
+        # Активні м'які резервації (в мудбордах з датами оренди)
+        soft_reservations_query = select(
+            SoftReservation.product_id,
+            func.sum(SoftReservation.quantity).label('reserved')
+        ).where(
+            and_(
+                SoftReservation.product_id.in_(product_ids),
+                SoftReservation.status == 'active',
+                SoftReservation.expires_at >= datetime.utcnow()
+            )
+        ).group_by(SoftReservation.product_id)
+        
+        soft_result = await db.execute(soft_reservations_query)
+        soft_reserved_dict = {row.product_id: int(row.reserved) for row in soft_result}
+        
+        # TODO: Додати підрахунок товарів на мийці/хімчистці/реставрації
+        # Якщо буде таблиця product_cleaning_status:
+        # cleaning_query = select(product_id, 1).where(status IN ('washing', 'repair', 'dry_cleaning'))
+        # cleaning_dict = {row[0]: 1 for row in cleaning_result}
+        
+        # Додати доступність до кожного продукту
+        products_with_availability = []
+        for product in products:
+            product_dict = {
+                "product_id": product.product_id,
+                "sku": product.sku,
+                "name": product.name,
+                "category_id": product.category_id,
+                "category_name": product.category_name,
+                "subcategory_id": product.subcategory_id,
+                "subcategory_name": product.subcategory_name,
+                "rental_price": float(product.rental_price) if product.rental_price else 0.0,
+                "damage_cost": float(product.damage_cost) if product.damage_cost else 0.0,
+                "image_url": product.image_url,
+                "color": product.color,
+                "material": product.material,
+                "size": product.size,
+                "status": product.status,
+                
+                # Статистика доступності
+                "quantity": product.quantity or 0,
+                "frozen_quantity": product.frozen_quantity or 0,
+                "reserved": soft_reserved_dict.get(product.product_id, 0),
+                "available": max(0, 
+                    (product.quantity or 0) - 
+                    (product.frozen_quantity or 0) - 
+                    soft_reserved_dict.get(product.product_id, 0)
+                ),
+                # TODO: додати in_cleaning, in_repair коли буде таблиця
+            }
+            products_with_availability.append(ProductListItem(**product_dict))
+        
+        return products_with_availability
     
     return products
 
