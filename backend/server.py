@@ -30,33 +30,32 @@ logger = logging.getLogger(__name__)
 # Create FastAPI app
 app = FastAPI(title="FarforDecor Event Planning API")
 
-# Mount static files from warehouse backend
+# Mount uploads from production warehouse server
 # Single source of truth for all product images
-# Database stores paths like: 
-#   - static/images/products/image/59/kreslo-2.jpg (old format)
-#   - uploads/products/FI8685_1764271319.png (new format)
+# Database stores paths like: uploads/products/FI8685_1764271319.png
 
-WAREHOUSE_STATIC_PATH = "/app/warehouse_admin/backend/static"
-if os.path.exists(WAREHOUSE_STATIC_PATH):
-    app.mount(
-        "/static",
-        StaticFiles(directory=WAREHOUSE_STATIC_PATH),
-        name="static"
-    )
-    logger.info(f"✅ Mounted warehouse static directory: {WAREHOUSE_STATIC_PATH}")
-else:
-    logger.warning(f"⚠️ Warehouse static directory not found: {WAREHOUSE_STATIC_PATH}")
+# Шлях на production сервері
+UPLOADS_PATH = "/home/farforre/farforrent.com.ua/rentalhub/backend/uploads"
 
-WAREHOUSE_UPLOADS_PATH = "/app/warehouse_admin/backend/uploads"
-if os.path.exists(WAREHOUSE_UPLOADS_PATH):
+if os.path.exists(UPLOADS_PATH):
     app.mount(
         "/uploads",
-        StaticFiles(directory=WAREHOUSE_UPLOADS_PATH),
+        StaticFiles(directory=UPLOADS_PATH),
         name="uploads"
     )
-    logger.info(f"✅ Mounted warehouse uploads directory: {WAREHOUSE_UPLOADS_PATH}")
+    logger.info(f"✅ Mounted uploads: {UPLOADS_PATH}")
 else:
-    logger.warning(f"⚠️ Warehouse uploads directory not found: {WAREHOUSE_UPLOADS_PATH}")
+    # Fallback для dev середовища
+    LOCAL_UPLOADS = "/app/warehouse_admin/backend/uploads"
+    if os.path.exists(LOCAL_UPLOADS):
+        app.mount(
+            "/uploads",
+            StaticFiles(directory=LOCAL_UPLOADS),
+            name="uploads"
+        )
+        logger.info(f"✅ Mounted uploads (local): {LOCAL_UPLOADS}")
+    else:
+        logger.warning(f"⚠️ Uploads directory not found. Images will not load.")
 
 # Create API router with /api prefix
 api_router = APIRouter(prefix="/api")
