@@ -1147,11 +1147,8 @@ async def convert_board_to_order(
     # Депозит = 30% від загальної вартості
     deposit_amount = total_price * 0.3
     
-    # 4. Отримати customer info
-    customer_result = await db.execute(
-        select(Customer).where(Customer.customer_id == customer_id)
-    )
-    customer = customer_result.scalar_one()
+    # 4. Customer info from current_user
+    customer = current_user
     
     # 5. Генерувати order_number
     # Format: OC-YYYYMMDD-XXXX
