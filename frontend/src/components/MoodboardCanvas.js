@@ -384,7 +384,7 @@ const MoodboardCanvas = ({ board, onClose, onSave }) => {
             background: '#fafafa'
           }}>
             <h3 className="font-bold mb-1" style={{fontSize: '14px', color: '#333', textTransform: 'uppercase', letterSpacing: '0.05em'}}>
-              📦 Товари мудборду
+              Товари мудборду
             </h3>
             <p className="fd-label">
               Клацніть на товар щоб додати на canvas
