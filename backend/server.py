@@ -1141,8 +1141,9 @@ async def convert_board_to_order(
         product = product_result.scalar_one()
         
         rental_days = (board.rental_end_date - board.rental_start_date).days + 1
-        item_price = product.rental_price * item.quantity * rental_days
-        total_price += float(item_price)
+        price = float(product.rental_price) if product.rental_price else 0
+        item_price = price * item.quantity * rental_days
+        total_price += item_price
     
     # Депозит = 30% від загальної вартості
     deposit_amount = total_price * 0.3
