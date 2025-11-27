@@ -194,6 +194,7 @@ const EventPlannerPage = () => {
   const [page, setPage] = useState(0);
   const [showNewBoardModal, setShowNewBoardModal] = useState(false);
   const [showCanvas, setShowCanvas] = useState(false);
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   const ITEMS_PER_PAGE = 50;
 
