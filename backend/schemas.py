@@ -180,30 +180,46 @@ class OrderResponse(BaseModel):
     customer_id: int
     customer_name: str
     phone: str
-    email: str
+    email: Optional[str] = None
     
     issue_date: date
     return_date: date
     
-    delivery_address: Optional[str]
+    delivery_address: Optional[str] = None
     city: str
-    delivery_type: Optional[str]
+    delivery_type: Optional[str] = None
     
     total_price: Decimal
     deposit_amount: Decimal
-    discount_amount: Decimal
+    discount_amount: Optional[Decimal] = None
     
     status: str
     source: str
     
-    customer_comment: Optional[str]
-    manager_comment: Optional[str]
+    customer_comment: Optional[str] = None
+    manager_comment: Optional[str] = None
     
-    event_board_id: Optional[str]
-    event_type: Optional[str]
-    guests_count: Optional[int]
+    event_board_id: Optional[str] = None
+    event_type: Optional[str] = None
+    guests_count: Optional[int] = None
     
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    # Additional fields from existing table
+    customer_phone: Optional[str] = None
+    customer_email: Optional[str] = None
+    event_date: Optional[date] = None
+    rental_start_date: Optional[date] = None
+    rental_end_date: Optional[date] = None
+    rental_days: Optional[int] = None
+    total_loss_value: Optional[Decimal] = None
+    synced_at: Optional[datetime] = None
+    notes: Optional[str] = None
+    client_confirmed: Optional[bool] = None
+    is_archived: Optional[bool] = None
+    damage_fee: Optional[Decimal] = None
+    issue_time: Optional[str] = None
+    return_time: Optional[str] = None
 
     message: Optional[str]
