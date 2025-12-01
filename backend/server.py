@@ -1168,29 +1168,32 @@ async def convert_board_to_order(
     order_number = f"OC-{today}-{new_num:04d}"
     
     # 6. Створити Order
-    order = Order(
-        order_number=order_number,
-        customer_id=customer_id,
-        customer_name=order_data.customer_name,
-        phone=order_data.phone,
-        email=customer.email,
-        issue_date=board.rental_start_date,
-        return_date=board.rental_end_date,
-        delivery_address=order_data.delivery_address,
-        city=order_data.city,
-        delivery_type=order_data.delivery_type,
-        total_price=total_price,
-        deposit_amount=deposit_amount,
-        discount_amount=0,
-        status='pending',
-        source='event_tool',
-        customer_comment=order_data.customer_comment,
-        event_board_id=board_id,
-        event_type=order_data.event_type,
-        guests_count=order_data.guests_count,
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow()
-    )
+    # Не передаємо order_id - дозволяємо AUTO_INCREMENT працювати
+    order_dict = {
+        'order_number': order_number,
+        'customer_id': customer_id,
+        'customer_name': order_data.customer_name,
+        'phone': order_data.phone,
+        'email': customer.email,
+        'issue_date': board.rental_start_date,
+        'return_date': board.rental_end_date,
+        'delivery_address': order_data.delivery_address,
+        'city': order_data.city,
+        'delivery_type': order_data.delivery_type,
+        'total_price': total_price,
+        'deposit_amount': deposit_amount,
+        'discount_amount': 0,
+        'status': 'pending',
+        'source': 'event_tool',
+        'customer_comment': order_data.customer_comment,
+        'event_board_id': board_id,
+        'event_type': order_data.event_type,
+        'guests_count': order_data.guests_count,
+        'created_at': datetime.utcnow(),
+        'updated_at': datetime.utcnow()
+    }
+    
+    order = Order(**order_dict)
     
     db.add(order)
     await db.flush()  # Get order_id
