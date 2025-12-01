@@ -1167,33 +1167,36 @@ async def convert_board_to_order(
     
     order_number = f"OC-{today}-{new_num:04d}"
     
-    # 6. Створити Order
-    # Не передаємо order_id - дозволяємо AUTO_INCREMENT працювати
-    order_dict = {
-        'order_number': order_number,
-        'customer_id': customer_id,
-        'customer_name': order_data.customer_name,
-        'phone': order_data.phone,
-        'email': customer.email,
-        'issue_date': board.rental_start_date,
-        'return_date': board.rental_end_date,
-        'delivery_address': order_data.delivery_address,
-        'city': order_data.city,
-        'delivery_type': order_data.delivery_type,
-        'total_price': total_price,
-        'deposit_amount': deposit_amount,
-        'discount_amount': 0,
-        'status': 'pending',
-        'source': 'event_tool',
-        'customer_comment': order_data.customer_comment,
-        'event_board_id': board_id,
-        'event_type': order_data.event_type,
-        'guests_count': order_data.guests_count,
-        'created_at': datetime.utcnow(),
-        'updated_at': datetime.utcnow()
-    }
+    # 6. Генерувати order_id вручну (workaround для відсутності AUTO_INCREMENT)
+    max_id_result = await db.execute(select(func.max(Order.order_id)))
+    max_id = max_id_result.scalar()
+    new_order_id = (max_id + 1) if max_id else 1
     
-    order = Order(**order_dict)
+    # Створити Order з явним order_id
+    order = Order(
+        order_id=new_order_id,
+        order_number=order_number,
+        customer_id=customer_id,
+        customer_name=order_data.customer_name,
+        phone=order_data.phone,
+        email=customer.email,
+        issue_date=board.rental_start_date,
+        return_date=board.rental_end_date,
+        delivery_address=order_data.delivery_address,
+        city=order_data.city,
+        delivery_type=order_data.delivery_type,
+        total_price=total_price,
+        deposit_amount=deposit_amount,
+        discount_amount=0,
+        status='pending',
+        source='event_tool',
+        customer_comment=order_data.customer_comment,
+        event_board_id=board_id,
+        event_type=order_data.event_type,
+        guests_count=order_data.guests_count,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
     
     db.add(order)
     await db.flush()  # Get order_id
