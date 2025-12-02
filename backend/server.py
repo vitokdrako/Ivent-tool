@@ -46,17 +46,36 @@ if os.path.exists(UPLOADS_PATH):
     )
     logger.info(f"✅ Mounted uploads: {UPLOADS_PATH}")
 else:
-    # Fallback для dev середовища
-    LOCAL_UPLOADS = "/app/warehouse_admin/backend/uploads"
-    if os.path.exists(LOCAL_UPLOADS):
-        app.mount(
-            "/uploads",
-            StaticFiles(directory=LOCAL_UPLOADS),
-            name="uploads"
-        )
-        logger.info(f"✅ Mounted uploads (local): {LOCAL_UPLOADS}")
-    else:
-        logger.warning(f"⚠️ Uploads directory not found. Images will not load.")
+    # Fallback - proxy до production warehouse server
+    logger.info(f"⚠️ Production uploads not found. Will proxy to warehouse server.")
+    
+    from fastapi import Request
+    from fastapi.responses import StreamingResponse, Response
+    import httpx
+    
+    @app.get("/uploads/{full_path:path}")
+    async def proxy_uploads(full_path: str, request: Request):
+        """Проксує запити до production warehouse сервера"""
+        target_url = f"https://www.farforrent.com.ua/uploads/{full_path}"
+        
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(target_url, follow_redirects=True)
+                
+                if response.status_code == 200:
+                    return Response(
+                        content=response.content,
+                        media_type=response.headers.get('content-type', 'application/octet-stream'),
+                        headers={
+                            'Cache-Control': 'public, max-age=86400',
+                        }
+                    )
+                else:
+                    # Повернути 404 якщо зображення не знайдено
+                    return Response(status_code=404, content=b'Image not found')
+            except Exception as e:
+                logger.error(f"Error proxying image {full_path}: {e}")
+                return Response(status_code=500, content=b'Error loading image')
 
 # Create API router with /api prefix
 api_router = APIRouter(prefix="/api")
