@@ -48,15 +48,15 @@ if os.path.exists(UPLOADS_PATH):
     )
     logger.info(f"✅ Mounted uploads: {UPLOADS_PATH}")
 else:
-    # Fallback - proxy до production warehouse server
+    # Fallback - proxy до production warehouse server через /api/uploads
     logger.info(f"⚠️ Production uploads not found. Will proxy to warehouse server.")
     
-    @app.get("/uploads/{full_path:path}")
-    async def proxy_uploads(full_path: str, request: Request):
+    @api_router.get("/uploads/{full_path:path}")
+    async def proxy_uploads(full_path: str):
         """Проксує запити до production warehouse сервера"""
         target_url = f"https://www.farforrent.com.ua/uploads/{full_path}"
         
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
             try:
                 response = await client.get(target_url, follow_redirects=True)
                 
