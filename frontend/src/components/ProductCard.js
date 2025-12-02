@@ -35,9 +35,9 @@ const ProductCard = ({ product, onAddToBoard, boardDates }) => {
 
   const getImageUrl = () => {
     if (product.image_url) {
-      // Single source of truth: warehouse static directory via backend
-      // image_url from DB: static/images/products/image/59/kreslo-2.jpg
-      return `${process.env.REACT_APP_BACKEND_URL}/${product.image_url}`;
+      // Single source of truth: warehouse via backend proxy
+      // image_url from DB: uploads/products/FI8685_1764271319.png
+      return `${process.env.REACT_APP_BACKEND_URL}/api/${product.image_url}`;
     }
     return null;
   };
