@@ -56,28 +56,38 @@ api_router = APIRouter(prefix="/api")
 
 # Proxy endpoint для зображень (якщо production uploads не знайдено)
 if not os.path.exists("/home/farforre/farforrent.com.ua/rentalhub/backend/uploads"):
+    # Production image base URL - може бути налаштовано через env
+    PRODUCTION_IMAGE_URL = os.getenv('PRODUCTION_IMAGE_URL', 'https://www.farforrent.com.ua')
+    
     @api_router.get("/uploads/{full_path:path}")
     async def proxy_uploads(full_path: str):
         """Проксує запити до production warehouse сервера"""
-        target_url = f"https://www.farforrent.com.ua/uploads/{full_path}"
+        # Спробувати різні можливі шляхи
+        possible_urls = [
+            f"{PRODUCTION_IMAGE_URL}/uploads/{full_path}",
+            f"https://farforrent.com.ua/uploads/{full_path}",
+            f"https://www.farforrent.com.ua/rentalhub/uploads/{full_path}",
+        ]
         
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            try:
-                response = await client.get(target_url, follow_redirects=True)
-                
-                if response.status_code == 200:
-                    return Response(
-                        content=response.content,
-                        media_type=response.headers.get('content-type', 'application/octet-stream'),
-                        headers={
-                            'Cache-Control': 'public, max-age=86400',
-                        }
-                    )
-                else:
-                    return Response(status_code=404, content=b'Image not found')
-            except Exception as e:
-                logger.error(f"Error proxying image {full_path}: {e}")
-                return Response(status_code=500, content=b'Error loading image')
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            for target_url in possible_urls:
+                try:
+                    response = await client.get(target_url, follow_redirects=True)
+                    
+                    if response.status_code == 200:
+                        return Response(
+                            content=response.content,
+                            media_type=response.headers.get('content-type', 'application/octet-stream'),
+                            headers={
+                                'Cache-Control': 'public, max-age=86400',
+                            }
+                        )
+                except Exception:
+                    continue
+            
+            # Якщо жодне зображення не знайдено, повернути placeholder
+            logger.warning(f"Image not found: {full_path}")
+            return Response(status_code=404, content=b'Image not found')
 
 # CORS
 app.add_middleware(
