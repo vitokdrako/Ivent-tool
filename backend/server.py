@@ -50,7 +50,12 @@ if os.path.exists(UPLOADS_PATH):
 else:
     # Fallback - proxy до production warehouse server через /api/uploads
     logger.info(f"⚠️ Production uploads not found. Will proxy to warehouse server.")
-    
+
+# Create API router with /api prefix
+api_router = APIRouter(prefix="/api")
+
+# Proxy endpoint для зображень (якщо production uploads не знайдено)
+if not os.path.exists("/home/farforre/farforrent.com.ua/rentalhub/backend/uploads"):
     @api_router.get("/uploads/{full_path:path}")
     async def proxy_uploads(full_path: str):
         """Проксує запити до production warehouse сервера"""
@@ -69,14 +74,10 @@ else:
                         }
                     )
                 else:
-                    # Повернути 404 якщо зображення не знайдено
                     return Response(status_code=404, content=b'Image not found')
             except Exception as e:
                 logger.error(f"Error proxying image {full_path}: {e}")
                 return Response(status_code=500, content=b'Error loading image')
-
-# Create API router with /api prefix
-api_router = APIRouter(prefix="/api")
 
 # CORS
 app.add_middleware(
