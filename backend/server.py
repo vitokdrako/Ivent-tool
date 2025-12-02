@@ -51,10 +51,6 @@ else:
     # Fallback - proxy до production warehouse server
     logger.info(f"⚠️ Production uploads not found. Will proxy to warehouse server.")
     
-    from fastapi import Request
-    from fastapi.responses import StreamingResponse, Response
-    import httpx
-    
     @app.get("/uploads/{full_path:path}")
     async def proxy_uploads(full_path: str, request: Request):
         """Проксує запити до production warehouse сервера"""
