@@ -56,17 +56,17 @@ api_router = APIRouter(prefix="/api")
 
 # Proxy endpoint для зображень (якщо production uploads не знайдено)
 if not os.path.exists("/home/farforre/farforrent.com.ua/rentalhub/backend/uploads"):
-    # Production image base URL - може бути налаштовано через env
-    PRODUCTION_IMAGE_URL = os.getenv('PRODUCTION_IMAGE_URL', 'https://www.farforrent.com.ua')
+    # Production warehouse backend URL
+    PRODUCTION_BACKEND_URL = os.getenv('PRODUCTION_BACKEND_URL', 'https://backrentalhub.farforrent.com.ua')
     
     @api_router.get("/uploads/{full_path:path}")
     async def proxy_uploads(full_path: str):
-        """Проксує запити до production warehouse сервера"""
+        """Проксує запити до production warehouse backend"""
         # Спробувати різні можливі шляхи
         possible_urls = [
-            f"{PRODUCTION_IMAGE_URL}/uploads/{full_path}",
-            f"https://farforrent.com.ua/uploads/{full_path}",
-            f"https://www.farforrent.com.ua/rentalhub/uploads/{full_path}",
+            f"{PRODUCTION_BACKEND_URL}/uploads/{full_path}",
+            f"https://backrentalhub.farforrent.com.ua/uploads/{full_path}",
+            f"https://www.farforrent.com.ua/uploads/{full_path}",
         ]
         
         async with httpx.AsyncClient(timeout=10.0) as client:
